@@ -1,11 +1,10 @@
 import React, { createContext, useContext, useEffect, useReducer } from 'react'
-import type { EventData } from '../api'
+import type { SocketEventData } from '../api'
 import { Api } from '../api'
 
-type GlobalStateItemType = string | number | boolean | null
-export type GlobalStateType = { [key: string]: GlobalStateItemType }
+export type GlobalStateType = SocketEventData
 
-type ActionType = { type: string; payload: GlobalStateItemType }
+type ActionType = { type: string; payload: any }
 type ActionsType = { [key: string]: string }
 type ReducerType = (
     state: GlobalStateType,
@@ -63,16 +62,16 @@ export const GlobalStateProvider: React.FC<{
     )
 
     useEffect(() => {
-        function onUpdateStateEvent(data: EventData.StateItem) {
+        function onUpdateStateEvent(data: SocketEventData) {
             dispatch({
                 type: `update_${data.key}`,
                 payload: data.value,
             })
         }
-        Api.events.addListener('UPDATE_STATE', onUpdateStateEvent)
+        Api.stateEvents.addEventListener('UPDATE', onUpdateStateEvent)
 
         return () => {
-            Api.events.removeListener('UPDATE_STATE', onUpdateStateEvent)
+            Api.stateEvents.removeEventListener('UPDATE', onUpdateStateEvent)
         }
     }, [])
 
@@ -96,12 +95,12 @@ export const useGlobalState = () => {
         return state[key]
     }
 
-    const setStateItem = (key: string, value: GlobalStateItemType) => {
-        Api.events.send({ id: 'SET_STATE', data: { key, value } })
+    const setStateItem = (key: string, value: unknown) => {
+        Api.stateEvents.send_event({ id: 'SET', data: { key, value } })
     }
 
     const saveState = () => {
-        Api.events.send({ id: 'SAVE_STATE' })
+        Api.stateEvents.send_event({ id: 'SAVE' })
     }
 
     return { getStateItem, setStateItem, saveState }

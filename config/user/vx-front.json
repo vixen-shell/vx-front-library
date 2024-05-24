@@ -1,0 +1,13 @@
+{
+    "frames": {
+        "main": {
+            "show_on_startup": true
+        }
+    },
+    "state": {
+        "user": "Nohaaaa",
+        "age": "41",
+        "gender": "female",
+        "city": "Montauban"
+    }
+}

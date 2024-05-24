@@ -1,5 +1,6 @@
 import { ApiRoutes } from './ApiRoutes'
 import { ApiEvents, EventData } from './ApiEvents'
+import { SocketEventHandler } from './SocketEventHandler'
 import { GlobalStateType } from '../state'
 
 function $GET<T>(route: string, dataKey: string): () => Promise<T> {
@@ -77,12 +78,17 @@ class Logger {
 
 export class Api {
     private static _routes: ApiRoutes | undefined = undefined
+    private static _stateEvents: SocketEventHandler | undefined = undefined
     private static _events: ApiEvents | undefined = undefined
     private static _isInit: boolean = false
 
     static async init(featureName: string, clientId: string) {
         if (!(await Api.ping())) throw new Error('Unable to acces Vixen Api.')
         Api._routes = new ApiRoutes(featureName, clientId)
+
+        Api._stateEvents = new SocketEventHandler(
+            Api._routes.FEATURE_STATE_EVENTS
+        )
         Api._events = new ApiEvents(Api._routes.FEATURE_PIPE)
         Api._isInit = true
     }
@@ -100,13 +106,18 @@ export class Api {
         }
     }
 
-    static get events() {
-        if (Api._events) return Api._events
+    static get routes() {
+        if (Api._routes) return Api._routes
         throw new Error('Api not initialized')
     }
 
-    static get routes() {
-        if (Api._routes) return Api._routes
+    static get stateEvents() {
+        if (Api._stateEvents) return Api._stateEvents
+        throw new Error('Api not initialized')
+    }
+
+    static get events() {
+        if (Api._events) return Api._events
         throw new Error('Api not initialized')
     }
 
@@ -114,5 +125,8 @@ export class Api {
         return $GET<GlobalStateType>(Api.routes.FEATURE_STATE, 'state')
     }
 
-    static Logger = Logger
+    static get logger() {
+        if (Api._isInit) return Logger
+        throw new Error('Api not initialized')
+    }
 }

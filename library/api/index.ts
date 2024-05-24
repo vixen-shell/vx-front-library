@@ -1,3 +1,5 @@
 export type { EventData } from './ApiEvents'
+export type { SocketEvent, SocketEventData } from './SocketEventHandler'
 export { Api } from './api'
-export { useLogListener, useLogHistory } from './hooks'
+export { useLogListener, useLogHistory, useHyprEvent } from './hooks'
+export { HyprEvents } from './HyprEvents'

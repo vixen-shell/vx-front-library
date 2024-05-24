@@ -1,6 +1,9 @@
 import type { EventData } from './ApiEvents'
+import type { HyprEventId } from './HyprEvents'
+
 import { useEffect, useRef, useState } from 'react'
 import { Api } from './api'
+import { HyprEvents } from './HyprEvents'
 
 const useLogListener = (): {
     logListening: boolean
@@ -16,15 +19,15 @@ const useLogListener = (): {
 
     useEffect(() => {
         return () => {
-            if (logListening) Api.Logger.removeListener(handleData.current)
+            if (logListening) Api.logger.removeListener(handleData.current)
         }
     }, [])
 
     useEffect(() => {
         if (logListening) {
-            Api.Logger.addListener(handleData.current)
+            Api.logger.addListener(handleData.current)
         } else {
-            Api.Logger.removeListener(handleData.current)
+            Api.logger.removeListener(handleData.current)
         }
     }, [logListening])
 
@@ -44,7 +47,7 @@ const useLogHistory = (): {
 
     useEffect(() => {
         ;(async () => {
-            setLogHistory(await Api.Logger.logs())
+            setLogHistory(await Api.logger.logs())
             setLogListening(true)
         })()
     }, [])
@@ -59,4 +62,22 @@ const useLogHistory = (): {
     }
 }
 
-export { useLogListener as useLogListener, useLogHistory }
+const useHyprEvent = (eventId: HyprEventId): object => {
+    const [value, setValue] = useState<object>({})
+
+    const handleEvent = useRef<(data: object) => void>((data: object) => {
+        setValue(data)
+    })
+
+    useEffect(() => {
+        HyprEvents.addEventListener(eventId, handleEvent.current)
+
+        return () => {
+            HyprEvents.removeEventListener(eventId, handleEvent.current)
+        }
+    }, [])
+
+    return value
+}
+
+export { useLogListener, useLogHistory, useHyprEvent }

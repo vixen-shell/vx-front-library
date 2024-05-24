@@ -30,6 +30,10 @@ export class ApiRoutes {
         return uri('http', `/feature/${this._featureName}/state`)
     }
 
+    get FEATURE_STATE_EVENTS() {
+        return uri('ws', `/feature/${this._featureName}/state`)
+    }
+
     get FEATURE_LOG_LISTENER() {
         return uri('http', `/feature/${this._featureName}/log_listener`)
     }

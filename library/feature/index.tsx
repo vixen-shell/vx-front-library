@@ -3,8 +3,7 @@ import type { GlobalStateType } from '../state'
 
 import { Routes, useRouter, RouterLink } from '../router'
 import { GlobalState, useGlobalState } from '../state'
-import { Api } from '../api'
-import { useLogListener, useLogHistory } from '../api'
+import { Api, useLogListener, useLogHistory, useHyprEvent } from '../api'
 
 import FeatureRender from './FeatureRender'
 
@@ -17,8 +16,9 @@ function $<T>(name: string, reference: T) {
 
 export class Feature {
     static isInit: boolean = false
+    static hyprEvents: boolean = false
 
-    static init(routes: RouteItems) {
+    static init(routes: RouteItems, hyprEvents: boolean = false) {
         if (Feature.isInit) {
             throw new Error('Feature is already initialized')
         }
@@ -30,9 +30,15 @@ export class Feature {
             initialState: GlobalStateType
         ) => {
             GlobalState.initialState = initialState
-            return <FeatureRender initialRoute={initialRoute} />
+            return (
+                <FeatureRender
+                    initialRoute={initialRoute}
+                    hyprEvents={hyprEvents}
+                />
+            )
         }
 
+        Feature.hyprEvents = hyprEvents
         Feature.isInit = true
         return feature
     }
@@ -50,6 +56,17 @@ export class Feature {
         get LogHistory() {
             return $<typeof useLogHistory>('LogHistory', useLogHistory)
         },
+        get HyprEvent() {
+            const use = $<typeof useHyprEvent>('HyprEvent', useHyprEvent)
+
+            if (!Feature.hyprEvents) {
+                throw new Error(
+                    "Cannot use 'HyprEvent'. To use it, please set the hyprEvents option to 'true' when initializing the feature"
+                )
+            }
+
+            return use
+        },
     }
 
     static get Link() {
@@ -57,7 +74,7 @@ export class Feature {
     }
 
     static get log() {
-        return $<typeof Api.Logger.log>('log', Api.Logger.log)
+        return $<typeof Api.logger.log>('log', Api.logger.log)
     }
 
     // static get Events() {
