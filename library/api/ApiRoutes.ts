@@ -5,11 +5,9 @@ function uri(scheme: 'http' | 'ws', path: string) {
 
 export class ApiRoutes {
     private _featureName: string
-    private _clientId: string
 
-    constructor(featureName: string, clientId: string) {
+    constructor(featureName: string) {
         this._featureName = featureName
-        this._clientId = clientId
     }
 
     static readonly PING = uri('http', '/ping')
@@ -30,20 +28,8 @@ export class ApiRoutes {
         return uri('http', `/feature/${this._featureName}/state`)
     }
 
-    get FEATURE_STATE_EVENTS() {
+    get FEATURE_STATE_SOCKET() {
         return uri('ws', `/feature/${this._featureName}/state`)
-    }
-
-    get FEATURE_LOG_LISTENER() {
-        return uri('http', `/feature/${this._featureName}/log_listener`)
-    }
-
-    get FEATURE_LOG_LISTENER_TOGGLE() {
-        return uri('http', `/feature/${this._featureName}/log_listener/toggle`)
-    }
-
-    get FEATURE_PIPE() {
-        return uri('ws', `/feature/${this._featureName}/pipe/${this._clientId}`)
     }
 
     get FRAME_IDS() {

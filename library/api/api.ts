@@ -33,12 +33,12 @@ export class Api {
     private static _stateEvents: SocketEventHandler | undefined = undefined
     private static _isInit: boolean = false
 
-    static async init(featureName: string, clientId: string) {
+    static async init(featureName: string) {
         if (!(await Api.ping())) throw new Error('Unable to acces Vixen Api.')
-        Api._routes = new ApiRoutes(featureName, clientId)
+        Api._routes = new ApiRoutes(featureName)
 
         Api._stateEvents = new SocketEventHandler(
-            Api._routes.FEATURE_STATE_EVENTS
+            Api._routes.FEATURE_STATE_SOCKET
         )
 
         Api._isInit = true

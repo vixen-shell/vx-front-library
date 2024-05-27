@@ -17,7 +17,6 @@ function getUrlParams() {
     return {
         featureName: urlParams.get('feature'),
         initialRoute: urlParams.get('route'),
-        clientId: urlParams.get('client_id'),
     }
 }
 
@@ -64,10 +63,7 @@ export function create(container: HTMLElement) {
     }
 
     async function initFeature(feature: FeatureCallback) {
-        if (!urlParams.clientId)
-            throw new Error("Missing 'client_id' parameter")
-
-        await Api.init(urlParams.featureName!, urlParams.clientId!)
+        await Api.init(urlParams.featureName!)
 
         const initialState = await Api.featureState()
         insertFeature(feature(urlParams.initialRoute!, initialState))
