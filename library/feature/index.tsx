@@ -1,11 +1,12 @@
 import type { RouteItems } from '../router'
 import type { GlobalStateType } from '../state'
-import type { DataHandlerInfo } from '../api'
+import type { HandlerInfo } from '../api'
 
 import { Routes, useRouter, RouterLink } from '../router'
 import { GlobalState, useGlobalState } from '../state'
 
 import {
+    useFeatureAction,
     useFeatureData,
     useFeatureDataStreamer,
     useFeatureSocket,
@@ -14,14 +15,19 @@ import {
 
 import FeatureRender from './FeatureRender'
 
+interface useActionProps {
+    featureName?: string
+    actionHandler: HandlerInfo
+}
+
 interface useDataProps {
     featureName?: string
-    dataHandlers: DataHandlerInfo[]
+    dataHandlers: HandlerInfo[]
 }
 
 interface useDataStreamerProps {
     featureName?: string
-    dataHandlers: DataHandlerInfo[]
+    dataHandlers: HandlerInfo[]
     interval?: number
     auto?: boolean
 }
@@ -71,6 +77,17 @@ export class Feature {
 
         get State() {
             return $<typeof useGlobalState>('State', useGlobalState)
+        },
+
+        Action({
+            featureName = Feature.featureName!,
+            actionHandler,
+        }: useActionProps) {
+            return $<{
+                run: () => () => void
+                isRunning: boolean
+                onTerminate: (callback: (error: any) => void) => void
+            }>('Action', useFeatureAction(featureName, actionHandler))
         },
 
         Data({

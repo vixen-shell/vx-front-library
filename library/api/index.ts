@@ -4,10 +4,13 @@ export type {
     SocketEventHandler,
 } from './SocketEventHandler'
 
-export type { DataHandlerInfo } from './hooks'
+export type { HandlerInfo } from './hooks'
+
 export {
+    useFeatureAction,
     useFeatureData,
     useFeatureDataStreamer,
     useFeatureSocket,
 } from './hooks'
+
 export { Api } from './api'

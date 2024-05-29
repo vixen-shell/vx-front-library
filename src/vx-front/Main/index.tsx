@@ -3,6 +3,11 @@ import { ui } from '../../__library'
 import { Feature } from '../../__library'
 
 export default function Main() {
+    const testAction = Feature.Use.Action({
+        featureName: 'feature_test',
+        actionHandler: { name: 'hello' },
+    })
+
     const sysDataStreamer = Feature.Use.DataStreamer({
         featureName: 'welcome',
         dataHandlers: [{ name: 'cpu_usage' }, { name: 'ram_usage' }],
@@ -24,6 +29,14 @@ export default function Main() {
     const setValueInput = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
+        testAction.onTerminate((error: any) => {
+            if (error) {
+                console.error('Test action ERREUR !!!')
+            } else {
+                console.log('Test Action réussi !!!')
+            }
+        })
+
         const focusedMonitor = (data: any) => {
             setMonitorName(data.monitor_name)
         }
@@ -82,6 +95,7 @@ export default function Main() {
                 <button onClick={handleSetStateItem}>Set state item</button>
             </ui.Frame>
             <button onClick={state.save}>Save state</button>
+            <button onClick={testAction.run}>Test action</button>
         </ui.Frame>
     )
 }

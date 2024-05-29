@@ -25,6 +25,9 @@ export class ApiRoutes {
     static feature_data(featureName: string) {
         return uri('http', `/feature/${featureName}/data`)
     }
+    static feature_action(featureName: string) {
+        return uri('http', `/feature/${featureName}/action`)
+    }
 
     // ----------------------------------- - - -
     // FEATURES ENDPOINTS
