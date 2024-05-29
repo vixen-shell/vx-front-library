@@ -8,25 +8,81 @@ export type SocketEvent = {
 type SocketEventListener = (data: SocketEventData) => void
 
 export class SocketEventHandler {
-    private _websocket: WebSocket
+    private _uri: string
+    private _socket: WebSocket | undefined = undefined
     private _listeners: { [key: string]: SocketEventListener[] } = {}
+    private _eventQueue: SocketEvent[] = []
 
-    constructor(socketRoute: string) {
-        this._websocket = new WebSocket(socketRoute)
+    constructor(uri: string) {
+        this._uri = uri
+    }
 
-        this._websocket.onmessage = (e) => {
-            const event: SocketEvent = JSON.parse(e.data)
-            this._handleInputEvents(event)
+    private _afterConnection(callBack: () => void) {
+        ;(async () => {
+            if (this._socket) {
+                let sleep = true
+                let runCallback = true
+
+                while (sleep) {
+                    if (this._socket.readyState === WebSocket.OPEN) {
+                        sleep = false
+                    }
+                    if (this._socket.readyState === WebSocket.CLOSED) {
+                        sleep = false
+                        runCallback = false
+                    }
+                    await new Promise((resolve) => setTimeout(resolve, 100))
+                }
+
+                if (runCallback) callBack()
+            }
+        })()
+    }
+
+    connect() {
+        if (!this._socket) {
+            this._socket = new WebSocket(this._uri)
+
+            this._socket.addEventListener('open', async () => {
+                if (this._eventQueue.length > 0) {
+                    this._afterConnection(() => {
+                        while (this._eventQueue.length > 0) {
+                            this._socket!.send(
+                                JSON.stringify(this._eventQueue.shift())
+                            )
+                        }
+                    })
+                }
+            })
+
+            this._socket.onmessage = (e) => {
+                const event: SocketEvent = JSON.parse(e.data)
+                const listeners = this._listeners[event.id]
+
+                if (listeners) {
+                    listeners.forEach((listener) => {
+                        listener(event.data || {})
+                    })
+                }
+            }
+        } else {
+            console.error(
+                `Socket event handler (${this._uri}): Already connected`
+            )
         }
     }
 
-    private _handleInputEvents(event: SocketEvent) {
-        const listeners = this._listeners[event.id]
+    disconnect() {
+        if (this._socket) {
+            const socket = this._socket
 
-        if (listeners) {
-            listeners.forEach((listener) => {
-                listener(event.data || {})
+            this._afterConnection(() => {
+                socket.close()
             })
+
+            this._socket = undefined
+        } else {
+            console.error(`Socket event handler (${this._uri}): Not connected`)
         }
     }
 
@@ -51,6 +107,12 @@ export class SocketEventHandler {
     }
 
     send_event(event: SocketEvent) {
-        this._websocket.send(JSON.stringify(event))
+        if (this._socket) {
+            if (this._socket.readyState == WebSocket.OPEN) {
+                this._socket.send(JSON.stringify(event))
+            } else {
+                this._eventQueue.push(event)
+            }
+        }
     }
 }

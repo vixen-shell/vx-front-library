@@ -12,3 +12,13 @@ content = Utils.define_feature_content(
         }
     }
 )
+
+
+@content.add("data")
+def hello(name: str = "World"):
+    return f"Hello {name} !!!"
+
+
+@content.add("data")
+def day():
+    return "Monday"

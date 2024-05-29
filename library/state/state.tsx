@@ -91,17 +91,17 @@ export const useGlobalState = () => {
 
     const { state } = context
 
-    const getStateItem = (key: string) => {
+    const getItem = (key: string) => {
         return state[key]
     }
 
-    const setStateItem = (key: string, value: unknown) => {
+    const setItem = (key: string, value: unknown) => {
         Api.stateEvents.send_event({ id: 'SET', data: { key, value } })
     }
 
-    const saveState = () => {
+    const save = () => {
         Api.stateEvents.send_event({ id: 'SAVE' })
     }
 
-    return { getStateItem, setStateItem, saveState }
+    return { getItem, setItem, save }
 }

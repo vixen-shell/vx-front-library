@@ -29,17 +29,19 @@ function $GET<T>(route: string, dataKey: string): () => Promise<T> {
 }
 
 export class Api {
-    private static _routes: ApiRoutes | undefined = undefined
+    static currentFeatureName: string | undefined = undefined
     private static _stateEvents: SocketEventHandler | undefined = undefined
     private static _isInit: boolean = false
 
     static async init(featureName: string) {
         if (!(await Api.ping())) throw new Error('Unable to acces Vixen Api.')
-        Api._routes = new ApiRoutes(featureName)
+
+        Api.currentFeatureName = featureName
 
         Api._stateEvents = new SocketEventHandler(
-            Api._routes.FEATURE_STATE_SOCKET
+            ApiRoutes.feature_state_socket(Api.currentFeatureName)
         )
+        Api._stateEvents.connect()
 
         Api._isInit = true
     }
@@ -50,16 +52,11 @@ export class Api {
 
     static async ping(): Promise<Boolean> {
         try {
-            if (!(await fetch(ApiRoutes.PING)).ok) return false
+            if (!(await fetch(ApiRoutes.ping)).ok) return false
             return true
         } catch (error) {
             return false
         }
-    }
-
-    static get routes() {
-        if (Api._routes) return Api._routes
-        throw new Error('Api not initialized')
     }
 
     static get stateEvents() {
@@ -68,6 +65,9 @@ export class Api {
     }
 
     static get featureState() {
-        return $GET<GlobalStateType>(Api.routes.FEATURE_STATE, 'state')
+        return $GET<GlobalStateType>(
+            ApiRoutes.feature_state(Api.currentFeatureName!),
+            'state'
+        )
     }
 }

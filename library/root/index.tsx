@@ -7,6 +7,7 @@ import { Api } from '../api'
 type ImportCallback = (featureName: string | null) => Promise<any>
 
 type FeatureCallback = (
+    featureName: string,
     initialRoute: string,
     initialState: GlobalStateType
 ) => JSX.Element
@@ -66,7 +67,13 @@ export function create(container: HTMLElement) {
         await Api.init(urlParams.featureName!)
 
         const initialState = await Api.featureState()
-        insertFeature(feature(urlParams.initialRoute!, initialState))
+        insertFeature(
+            feature(
+                urlParams.featureName!,
+                urlParams.initialRoute!,
+                initialState
+            )
+        )
     }
 
     async function render(importCallback: ImportCallback) {
