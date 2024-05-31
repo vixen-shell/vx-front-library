@@ -1,7 +1,10 @@
-import type { HandlerInfo } from './types'
-
 import { useCallback, useEffect, useState } from 'react'
 import { ApiRoutes } from '../ApiRoutes'
+
+export interface HandlerInfo {
+    name: string
+    args?: any[]
+}
 
 const isSupportedImageType = (mimeType: string) => {
     const supportedImageTypes = [

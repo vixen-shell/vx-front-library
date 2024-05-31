@@ -1,6 +1,5 @@
 import type { RouteItems } from '../router'
 import type { GlobalStateType } from '../state'
-import type { HandlerInfo } from '../api'
 
 import { Routes, useRouter, RouterLink } from '../router'
 import { GlobalState, useGlobalState } from '../state'
@@ -17,6 +16,11 @@ import {
 } from '../api'
 
 import FeatureRender from './FeatureRender'
+
+export interface HandlerInfo {
+    name: string
+    args?: any[]
+}
 
 interface useActionProps {
     featureName?: string

@@ -4,8 +4,6 @@ export type {
     SocketEventHandler,
 } from './SocketEventHandler'
 
-export type { HandlerInfo } from './hooks'
-
 export {
     useFeatureAction,
     useFeatureData,

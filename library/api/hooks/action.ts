@@ -1,7 +1,10 @@
-import type { HandlerInfo } from './types'
-
 import { useState, useRef, useCallback } from 'react'
 import { ApiRoutes } from '../ApiRoutes'
+
+export interface HandlerInfo {
+    name: string
+    args?: any[]
+}
 
 export const useFeatureAction = (
     featureName: string,

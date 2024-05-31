@@ -1,8 +1,11 @@
-import type { HandlerInfo } from './types'
-
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { ApiRoutes } from '../ApiRoutes'
 import { SocketEventHandler, SocketEventData } from '../SocketEventHandler'
+
+export interface HandlerInfo {
+    name: string
+    args?: any[]
+}
 
 export const useFeatureDataStreamer = (
     featureName: string,
