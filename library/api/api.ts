@@ -2,39 +2,35 @@ import { ApiRoutes } from './ApiRoutes'
 import { SocketEventHandler } from './SocketEventHandler'
 import { GlobalStateType } from '../state'
 
-function $GET<T>(route: string, dataKey: string): () => Promise<T> {
-    if (Api.isInit) {
-        return async (): Promise<T> => {
-            const response = await fetch(route)
+async function request(route: string, force: boolean = false) {
+    if (!force && !Api.isInit) throw new Error('Api not initialized')
 
-            if (!response.ok) {
-                try {
-                    const data = await response.json()
-                    throw new Error(data.message)
-                } catch (error: any) {
-                    throw new Error(error.message)
-                }
-            }
+    try {
+        const response = await fetch(route)
 
-            const data: any = await response.json()
-
-            if (dataKey in data) {
-                return data[dataKey] as T
-            } else {
-                throw new Error(`Unable to acces ${dataKey}`)
-            }
+        if (!response.ok) {
+            const errorResponse = await response.json()
+            throw new Error(errorResponse.message || 'Request Error')
         }
+
+        return await response.json()
+    } catch (error: any) {
+        console.error(error)
+        throw error
     }
-    throw new Error('Api not initialized')
 }
 
 export class Api {
+    static featureNames: string[] | undefined = undefined
     static currentFeatureName: string | undefined = undefined
     private static _stateEvents: SocketEventHandler | undefined = undefined
     private static _isInit: boolean = false
 
     static async init(featureName: string) {
         if (!(await Api.ping())) throw new Error('Unable to acces Vixen Api.')
+
+        Api.featureNames = (await request(ApiRoutes.features_names, true))
+            .names as string[]
 
         Api.currentFeatureName = featureName
 
@@ -64,10 +60,10 @@ export class Api {
         throw new Error('Api not initialized')
     }
 
-    static get featureState() {
-        return $GET<GlobalStateType>(
-            ApiRoutes.feature_state(Api.currentFeatureName!),
-            'state'
+    static async getInitialState() {
+        const data = await request(
+            ApiRoutes.feature_state(Api.currentFeatureName!)
         )
+        return data.state as GlobalStateType
     }
 }

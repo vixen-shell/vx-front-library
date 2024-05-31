@@ -3,6 +3,21 @@ import { ui } from '../../__library'
 import { Feature } from '../../__library'
 
 export default function Main() {
+    const welcomeFrames = Feature.Use.Frames('welcome')
+
+    const icons = Feature.Use.ImageFiles({
+        featureName: 'system',
+        fileHandlers: {
+            firefox: { name: 'icon', args: ['firefox'] },
+            folder: { name: 'icon', args: ['folder', 'blue'] },
+        },
+    })
+
+    const runAction = Feature.Use.Action({
+        featureName: 'system',
+        actionHandler: { name: 'run', args: ['rofi', ['-show', 'drun'], true] },
+    })
+
     const testAction = Feature.Use.Action({
         featureName: 'feature_test',
         actionHandler: { name: 'hello' },
@@ -29,11 +44,22 @@ export default function Main() {
     const setValueInput = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
-        testAction.onTerminate((error: any) => {
+        console.log(Feature.names)
+        testAction.onTerminate((data: any, error: any) => {
             if (error) {
                 console.error('Test action ERREUR !!!')
             } else {
                 console.log('Test Action réussi !!!')
+                console.log(data)
+            }
+        })
+
+        runAction.onTerminate((data: any, error: any) => {
+            if (error) {
+                console.error('Run action ERREUR !!!')
+            } else {
+                console.log('Run Action réussi !!!')
+                console.log(data)
             }
         })
 
@@ -74,7 +100,12 @@ export default function Main() {
         <ui.Frame gap={16}>
             <p>
                 {sysDataStreamer.data
-                    ? sysDataStreamer.data.cpu_usage + ' %'
+                    ? 'CPU: ' +
+                      sysDataStreamer.data.cpu_usage +
+                      ' % | ' +
+                      'RAM: ' +
+                      sysDataStreamer.data.ram_usage +
+                      ' %'
                     : 'None'}
             </p>
             <p>{monitorName}</p>
@@ -94,8 +125,27 @@ export default function Main() {
                 <input ref={setValueInput} id="value_input" type="text" />
                 <button onClick={handleSetStateItem}>Set state item</button>
             </ui.Frame>
-            <button onClick={state.save}>Save state</button>
-            <button onClick={testAction.run}>Test action</button>
+            <ui.Frame gap={16} direction="row" height={32}>
+                <button onClick={state.save}>Save state</button>
+                <button onClick={testAction.run}>Test action</button>
+                <button onClick={runAction.run}>Explorer</button>
+                <button
+                    onClick={() => {
+                        welcomeFrames.toggle('about')
+                    }}
+                >
+                    Toggle About
+                </button>
+            </ui.Frame>
+            <ui.Frame gap={32} direction="row" height={128}>
+                <img src={icons.firefox} width={64} />
+                <img src={icons.folder} width={64} />
+            </ui.Frame>
+            <h3>Welcome Frames</h3>
+            <ui.Frame gap={32} direction="row" height={128}>
+                <p>Ids: {JSON.stringify(welcomeFrames.ids)}</p>
+                <p>Actives: {JSON.stringify(welcomeFrames.actives)}</p>
+            </ui.Frame>
         </ui.Frame>
     )
 }

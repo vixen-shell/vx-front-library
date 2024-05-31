@@ -6,10 +6,13 @@ import { Routes, useRouter, RouterLink } from '../router'
 import { GlobalState, useGlobalState } from '../state'
 
 import {
+    Api,
     useFeatureAction,
     useFeatureData,
     useFeatureDataStreamer,
+    useImageFiles,
     useFeatureSocket,
+    useFeatureFrames,
     SocketEventHandler,
 } from '../api'
 
@@ -30,6 +33,11 @@ interface useDataStreamerProps {
     dataHandlers: HandlerInfo[]
     interval?: number
     auto?: boolean
+}
+
+interface useImageFilesProps {
+    featureName?: string
+    fileHandlers: Record<string, HandlerInfo>
 }
 
 interface useSocketProps {
@@ -70,6 +78,14 @@ export class Feature {
         return feature
     }
 
+    static get names() {
+        return $<string[] | undefined>('feature names', Api.featureNames)
+    }
+
+    static get Link() {
+        return $<typeof RouterLink>('Link', RouterLink)
+    }
+
     static Use = {
         get Router() {
             return $<typeof useRouter>('Router', useRouter)
@@ -79,6 +95,16 @@ export class Feature {
             return $<typeof useGlobalState>('State', useGlobalState)
         },
 
+        Frames(featureName: string = Feature.featureName!) {
+            return $<{
+                ids: string[]
+                actives: string[]
+                toggle: (frameId: string) => () => void
+                open: (frameId: string) => () => void
+                close: (frameId: string) => () => void
+            }>('Frames', useFeatureFrames(featureName))
+        },
+
         Action({
             featureName = Feature.featureName!,
             actionHandler,
@@ -86,7 +112,7 @@ export class Feature {
             return $<{
                 run: () => () => void
                 isRunning: boolean
-                onTerminate: (callback: (error: any) => void) => void
+                onTerminate: (callback: (data: any, error: any) => void) => void
             }>('Action', useFeatureAction(featureName, actionHandler))
         },
 
@@ -95,7 +121,7 @@ export class Feature {
             dataHandlers,
         }: useDataProps) {
             return $<{
-                getData: () => void
+                update: () => void
                 data: Record<string, any> | undefined
             }>('Data', useFeatureData(featureName, dataHandlers))
         },
@@ -121,6 +147,16 @@ export class Feature {
             )
         },
 
+        ImageFiles({
+            featureName = Feature.featureName!,
+            fileHandlers,
+        }: useImageFilesProps) {
+            return $<Record<string, string | undefined>>(
+                'ImageFile',
+                useImageFiles(featureName, fileHandlers)
+            )
+        },
+
         Socket({
             featureName = Feature.featureName!,
             socketName,
@@ -131,9 +167,5 @@ export class Feature {
                 useFeatureSocket(featureName, socketName, auto)
             )
         },
-    }
-
-    static get Link() {
-        return $<typeof RouterLink>('Link', RouterLink)
     }
 }

@@ -8,7 +8,7 @@ export const useFeatureAction = (
     actionHandler: HandlerInfo
 ) => {
     const [isRunning, setIsRunning] = useState<boolean>(false)
-    const terminate = useRef<(error: any) => void>()
+    const terminate = useRef<(data: any, error: any) => void>()
 
     const run = useCallback(() => {
         setIsRunning(true)
@@ -35,10 +35,14 @@ export const useFeatureAction = (
                     throw new Error(errorResponse.message)
                 }
 
-                if (terminate.current) terminate.current(null)
+                if (terminate.current) {
+                    terminate.current(await response.json(), null)
+                }
             } catch (error: any) {
                 console.error(error)
-                if (terminate.current) terminate.current(error)
+                if (terminate.current) {
+                    terminate.current(null, error)
+                }
             } finally {
                 setIsRunning(false)
             }
@@ -47,9 +51,12 @@ export const useFeatureAction = (
         return () => controller.abort()
     }, [featureName, actionHandler])
 
-    const onTerminate = useCallback((callback: (error: any) => void) => {
-        terminate.current = callback
-    }, [])
+    const onTerminate = useCallback(
+        (callback: (data: any, error: any) => void) => {
+            terminate.current = callback
+        },
+        []
+    )
 
     return { run, isRunning, onTerminate }
 }

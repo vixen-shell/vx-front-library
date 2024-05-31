@@ -9,7 +9,7 @@ export const useFeatureData = (
 ) => {
     const [data, setData] = useState<Record<string, any> | undefined>(undefined)
 
-    const getData = useCallback(() => {
+    const update = useCallback(() => {
         const controller = new AbortController()
         const { signal } = controller
 
@@ -42,5 +42,5 @@ export const useFeatureData = (
         return () => controller.abort()
     }, [featureName, dataHandlers])
 
-    return { getData, data }
+    return { update, data }
 }
