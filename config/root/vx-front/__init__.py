@@ -9,16 +9,17 @@ content = Utils.define_feature_content(
                 "route": "main",
                 "layer_frame": "disable",
             }
-        }
+        },
+        "state": "disable",
     }
 )
 
 
-@content.add("data")
+@content.add_handler("data")
 def hello(name: str = "World"):
     return f"Hello {name} !!!"
 
 
-@content.add("data")
+@content.add_handler("data")
 def day():
     return "Monday"

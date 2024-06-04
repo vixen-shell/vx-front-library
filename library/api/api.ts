@@ -61,9 +61,14 @@ export class Api {
     }
 
     static async getInitialState() {
-        const data = await request(
-            ApiRoutes.feature_state(Api.currentFeatureName!)
-        )
-        return data.state as GlobalStateType
+        try {
+            const data = await request(
+                ApiRoutes.feature_state(Api.currentFeatureName!)
+            )
+            return data.state as GlobalStateType
+        } catch (error: any) {
+            console.warn(error)
+            return {}
+        }
     }
 }

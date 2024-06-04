@@ -3,11 +3,5 @@
         "main": {
             "show_on_startup": true
         }
-    },
-    "state": {
-        "user": "Noha",
-        "age": "41",
-        "gender": "female",
-        "city": "Montauban"
     }
 }
