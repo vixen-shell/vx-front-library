@@ -9,7 +9,7 @@ type ImportCallback = (featureName: string | null) => Promise<any>
 type FeatureCallback = (
     featureName: string,
     initialRoute: string,
-    initialState: GlobalStateType
+    initialState: GlobalStateType | null
 ) => JSX.Element
 
 function getUrlParams() {
@@ -66,12 +66,11 @@ export function create(container: HTMLElement) {
     async function initFeature(feature: FeatureCallback) {
         await Api.init(urlParams.featureName!)
 
-        const initialState = await Api.getInitialState()
         insertFeature(
             feature(
                 urlParams.featureName!,
                 urlParams.initialRoute!,
-                initialState
+                await Api.getInitialState()
             )
         )
     }

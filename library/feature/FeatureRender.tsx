@@ -1,15 +1,22 @@
 import { GlobalStateProvider } from '../state'
 import { RouterProvider, RouterRender } from '../router'
 
-const FeatureRender: React.FC<{ initialRoute: string }> = ({
+const FeatureRender: React.FC<{ initialRoute: string; state: boolean }> = ({
     initialRoute,
+    state,
 }) => {
-    return (
+    const Render = () => (
+        <RouterProvider initialRoute={initialRoute}>
+            <RouterRender />
+        </RouterProvider>
+    )
+
+    return state ? (
         <GlobalStateProvider>
-            <RouterProvider initialRoute={initialRoute}>
-                <RouterRender />
-            </RouterProvider>
+            <Render />
         </GlobalStateProvider>
+    ) : (
+        <Render />
     )
 }
 

@@ -15,7 +15,7 @@ async function request(route: string, force: boolean = false) {
 
         return await response.json()
     } catch (error: any) {
-        console.error(error)
+        // console.error(error)
         throw error
     }
 }
@@ -60,15 +60,11 @@ export class Api {
         throw new Error('Api not initialized')
     }
 
-    static async getInitialState() {
-        try {
-            const data = await request(
-                ApiRoutes.feature_state(Api.currentFeatureName!)
-            )
-            return data.state as GlobalStateType
-        } catch (error: any) {
-            console.warn(error)
-            return {}
-        }
+    static async getInitialState(): Promise<GlobalStateType | null> {
+        const initialState = (
+            await request(ApiRoutes.feature_state(Api.currentFeatureName!))
+        ).state
+
+        return (initialState as GlobalStateType) || null
     }
 }

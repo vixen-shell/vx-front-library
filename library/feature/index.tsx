@@ -71,12 +71,17 @@ export class Feature {
         const feature = (
             featureName: string,
             initialRoute: string,
-            initialState: GlobalStateType
+            initialState: GlobalStateType | null
         ) => {
             Feature.isInit = true
             Feature.featureName = featureName
-            GlobalState.initialState = initialState
-            return <FeatureRender initialRoute={initialRoute} />
+            if (initialState) GlobalState.initialState = initialState
+            return (
+                <FeatureRender
+                    initialRoute={initialRoute}
+                    state={Boolean(initialState)}
+                />
+            )
         }
 
         return feature

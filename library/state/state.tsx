@@ -84,10 +84,7 @@ export const GlobalStateProvider: React.FC<{
 
 export const useGlobalState = () => {
     const context = useContext(Context)
-    if (!context)
-        throw new Error(
-            'useFeatureState must be used within a FeatureStateProvider.'
-        )
+    if (!context) throw new Error('The state provider is not available')
 
     const { state } = context
 
