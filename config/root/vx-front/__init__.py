@@ -9,8 +9,7 @@ content = Utils.define_feature_content(
                 "route": "main",
                 "layer_frame": "disable",
             }
-        },
-        "state": "disable",
+        }
     }
 )
 
