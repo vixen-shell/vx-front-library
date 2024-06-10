@@ -10,7 +10,7 @@ export const useFeatureData = (
     featureName: string,
     dataHandlers: HandlerInfo[]
 ) => {
-    const [data, setData] = useState<Record<string, any> | undefined>(undefined)
+    const [data, setData] = useState<Record<string, any>>({})
 
     const update = useCallback(() => {
         const controller = new AbortController()
@@ -37,7 +37,7 @@ export const useFeatureData = (
 
                 setData(await response.json())
             } catch (error: any) {
-                if (data) setData(undefined)
+                if (data) setData({})
                 console.error(error)
             }
         })()

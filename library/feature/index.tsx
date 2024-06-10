@@ -131,7 +131,7 @@ export class Feature {
         }: useDataProps) {
             return $<{
                 update: () => void
-                data: Record<string, any> | undefined
+                data: Record<string, any>
             }>('Data', useFeatureData(featureName, dataHandlers))
         },
 
@@ -142,7 +142,7 @@ export class Feature {
             auto = true,
         }: useDataStreamerProps) {
             return $<{
-                data: Record<string, any> | undefined
+                data: Record<string, any>
                 start: () => void
                 stop: () => void
             }>(

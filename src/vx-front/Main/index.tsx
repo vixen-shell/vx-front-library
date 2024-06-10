@@ -3,8 +3,6 @@ import { ui } from '../../__library'
 import { Feature } from '../../__library'
 
 export default function Main() {
-    const welcomeFrames = Feature.Use.Frames('welcome')
-
     const icons = Feature.Use.ImageFiles({
         featureName: 'system',
         fileHandlers: {
@@ -24,7 +22,7 @@ export default function Main() {
     })
 
     const sysDataStreamer = Feature.Use.DataStreamer({
-        featureName: 'welcome',
+        featureName: 'system',
         dataHandlers: [{ name: 'cpu_usage' }, { name: 'ram_usage' }],
         interval: 2,
     })
@@ -99,14 +97,8 @@ export default function Main() {
     return (
         <ui.Frame gap={16}>
             <p>
-                {sysDataStreamer.data
-                    ? 'CPU: ' +
-                      sysDataStreamer.data.cpu_usage +
-                      ' % | ' +
-                      'RAM: ' +
-                      sysDataStreamer.data.ram_usage +
-                      ' %'
-                    : 'None'}
+                CPU: {sysDataStreamer.data.cpu_usage} | RAM:{' '}
+                {sysDataStreamer.data.ram_usage}
             </p>
             <p>{monitorName}</p>
             <p>{activeWindow}</p>
@@ -129,22 +121,10 @@ export default function Main() {
                 <button onClick={state.save}>Save state</button>
                 <button onClick={testAction.run}>Test action</button>
                 <button onClick={runAction.run}>Explorer</button>
-                <button
-                    onClick={() => {
-                        welcomeFrames.toggle('about')
-                    }}
-                >
-                    Toggle About
-                </button>
             </ui.Frame>
             <ui.Frame gap={32} direction="row" height={128}>
                 <img src={icons.firefox} width={64} />
                 <img src={icons.folder} width={64} />
-            </ui.Frame>
-            <h3>Welcome Frames</h3>
-            <ui.Frame gap={32} direction="row" height={128}>
-                <p>Ids: {JSON.stringify(welcomeFrames.ids)}</p>
-                <p>Actives: {JSON.stringify(welcomeFrames.actives)}</p>
             </ui.Frame>
         </ui.Frame>
     )

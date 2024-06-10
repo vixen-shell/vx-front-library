@@ -13,7 +13,7 @@ export const useFeatureDataStreamer = (
     interval: number,
     auto: boolean
 ) => {
-    const [data, setData] = useState<Record<string, any> | undefined>(undefined)
+    const [data, setData] = useState<Record<string, any>>({})
 
     const socket = useRef<SocketEventHandler>(
         new SocketEventHandler(ApiRoutes.feature_data_streamer(featureName))
@@ -26,7 +26,7 @@ export const useFeatureDataStreamer = (
 
         const onError = (data: SocketEventData) => {
             console.error(data.message)
-            setData(undefined)
+            setData({})
         }
 
         socket.current.addEventListener('UPDATE', onUpdate)
