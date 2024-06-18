@@ -14,11 +14,6 @@
 
     user-select: none;
     -webkit-user-select: none;
-
-    /*
-    -moz-user-select: none;
-    -ms-user-select: none;
-    */
 }
 
 * {
@@ -30,12 +25,9 @@
 #root {
     display: flex;
     height: 100vh;
+    overflow: hidden;
 }
 
 .ui_link {
     color: #1ed89a;
 }
-
-/* .ui_frame {
-    border: 1px solid #1ed89a;
-} */

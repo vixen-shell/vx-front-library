@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { ui } from '../../__library'
 import { Feature } from '../../__library'
 
 export default function Main() {
@@ -95,7 +94,7 @@ export default function Main() {
     }
 
     return (
-        <ui.Frame gap={16}>
+        <div>
             <p>
                 CPU: {sysDataStreamer.data.cpu_usage} | RAM:{' '}
                 {sysDataStreamer.data.ram_usage}
@@ -103,29 +102,29 @@ export default function Main() {
             <p>{monitorName}</p>
             <p>{activeWindow}</p>
             <h1>Hello {state.getItem('user')} !!</h1>
-            <ui.Frame gap={16} direction="row" height={32}>
+            <div>
                 <label htmlFor="get_key_input">Key: </label>
                 <input ref={getKeyInput} id="get_key_input" type="text" />
                 <span>Value:</span>
                 <span>{value ? value : 'None'}</span>
                 <button onClick={handleGetStateItem}>Get state item</button>
-            </ui.Frame>
-            <ui.Frame gap={16} direction="row" height={32}>
+            </div>
+            <div>
                 <label htmlFor="key_input">Key: </label>
                 <input ref={setKeyInput} id="key_input" type="text" />
                 <label htmlFor="value_input">Value: </label>
                 <input ref={setValueInput} id="value_input" type="text" />
                 <button onClick={handleSetStateItem}>Set state item</button>
-            </ui.Frame>
-            <ui.Frame gap={16} direction="row" height={32}>
+            </div>
+            <div>
                 <button onClick={state.save}>Save state</button>
                 <button onClick={testAction.run}>Test action</button>
                 <button onClick={runAction.run}>Explorer</button>
-            </ui.Frame>
-            <ui.Frame gap={32} direction="row" height={128}>
+            </div>
+            <div>
                 <img src={icons.firefox} width={64} />
                 <img src={icons.folder} width={64} />
-            </ui.Frame>
-        </ui.Frame>
+            </div>
+        </div>
     )
 }

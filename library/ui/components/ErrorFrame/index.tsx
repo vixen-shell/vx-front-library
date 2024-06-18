@@ -1,4 +1,3 @@
-import Frame from '../Frame'
 import vixenLogo from '../../assets/vixen_logo.svg'
 
 interface ErrorFrameProps {
@@ -7,8 +6,19 @@ interface ErrorFrameProps {
 
 export default function ErrorFrame({ message }: ErrorFrameProps) {
     return (
-        <Frame gap={32}>
-            <Frame direction="row" height={100} gap={16}>
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                height: '100%',
+                gap: '32px',
+                overflow: 'auto',
+            }}
+        >
+            <div style={{ display: 'flex', gap: '16px' }}>
                 <span
                     style={{
                         color: '#008080',
@@ -19,8 +29,8 @@ export default function ErrorFrame({ message }: ErrorFrameProps) {
                     !
                 </span>
                 <img src={vixenLogo} height={96} />
-            </Frame>
+            </div>
             {message && <p style={{ fontSize: '32px' }}>{message}</p>}
-        </Frame>
+        </div>
     )
 }
