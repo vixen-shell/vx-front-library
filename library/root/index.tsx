@@ -1,4 +1,3 @@
-// import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { ErrorFrame } from '../ui'
 import { GlobalStateType } from '../state'
@@ -56,11 +55,7 @@ export function create(container: HTMLElement) {
     function insertFeature(feature: JSX.Element) {
         const Feature = () => feature
 
-        ReactDOM.createRoot(container).render(
-            // <React.StrictMode>
-            <Feature />
-            // </React.StrictMode>
-        )
+        ReactDOM.createRoot(container).render(<Feature />)
     }
 
     async function initFeature(feature: FeatureCallback) {

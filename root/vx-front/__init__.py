@@ -5,20 +5,18 @@ content = Utils.define_feature_content(
     {
         "frames": {
             "main": {
-                "name": "Main frame",
+                "name": "Vixen Panel",
                 "route": "main",
-                "layer_frame": "disable",
+                "layer_frame": {
+                    "monitor_id": 0,
+                    "height": 42,
+                    "anchor_edge": "top",
+                    "alignment": "center",
+                    "auto_exclusive_zone": True,
+                    "level": "top",
+                },
             }
-        }
+        },
+        "state": "disable",
     }
 )
-
-
-@content.add_handler("data")
-def hello(name: str = "World"):
-    return f"Hello {name} !!!"
-
-
-@content.add_handler("data")
-def day():
-    return "Monday"

@@ -1,29 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
+import styles from './index.module.css'
 import { Feature } from '../../__library'
+import { useEffect, useState } from 'react'
 
 export default function Main() {
-    const icons = Feature.Use.ImageFiles({
-        featureName: 'system',
-        fileHandlers: {
-            firefox: { name: 'icon', args: ['firefox'] },
-            folder: { name: 'icon', args: ['folder', 'blue'] },
-        },
-    })
-
-    const runAction = Feature.Use.Action({
-        featureName: 'system',
-        actionHandler: { name: 'run', args: ['rofi', ['-show', 'drun'], true] },
-    })
-
-    const testAction = Feature.Use.Action({
-        featureName: 'feature_test',
-        actionHandler: { name: 'hello' },
-    })
-
-    const sysDataStreamer = Feature.Use.DataStreamer({
+    const [windowTitle, setWindowTitle] = useState<string>('None')
+    const sysInfos = Feature.Use.DataStreamer({
         featureName: 'system',
         dataHandlers: [{ name: 'cpu_usage' }, { name: 'ram_usage' }],
-        interval: 2,
     })
 
     const hyprSocket = Feature.Use.Socket({
@@ -31,99 +14,41 @@ export default function Main() {
         socketName: 'events',
     })
 
-    const state = Feature.Use.State()
-    const [value, setValue] = useState<any>()
-    const [monitorName, setMonitorName] = useState<string>('None')
-    const [activeWindow, setActiveWindow] = useState<string>('None')
-
-    const getKeyInput = useRef<HTMLInputElement>(null)
-    const setKeyInput = useRef<HTMLInputElement>(null)
-    const setValueInput = useRef<HTMLInputElement>(null)
-
     useEffect(() => {
-        console.log(Feature.names)
-        testAction.onTerminate((data: any, error: any) => {
-            if (error) {
-                console.error('Test action ERREUR !!!')
-            } else {
-                console.log('Test Action réussi !!!')
-                console.log(data)
-            }
-        })
-
-        runAction.onTerminate((data: any, error: any) => {
-            if (error) {
-                console.error('Run action ERREUR !!!')
-            } else {
-                console.log('Run Action réussi !!!')
-                console.log(data)
-            }
-        })
-
-        const focusedMonitor = (data: any) => {
-            setMonitorName(data.monitor_name)
+        const onActiveWindow = (data: any) => {
+            setWindowTitle(data.window_title)
         }
 
-        const activeWindow = (data: any) => {
-            setActiveWindow(data.window_title)
-        }
-
-        hyprSocket.addEventListener('focusedmon', focusedMonitor)
-        hyprSocket.addEventListener('activewindow', activeWindow)
+        hyprSocket.addEventListener('activewindow', onActiveWindow)
 
         return () => {
-            hyprSocket.removeEventListener('focusedmon', focusedMonitor)
-            hyprSocket.removeEventListener('activewindow', activeWindow)
+            hyprSocket.removeEventListener('activewindow', onActiveWindow)
         }
     }, [])
 
-    const handleGetStateItem = () => {
-        const key = getKeyInput.current?.value
-        setValue(state.getItem(key || ''))
-    }
-    const handleSetStateItem = () => {
-        const key = setKeyInput.current?.value
-        const value = setValueInput.current?.value
-
-        if (key) {
-            console.log(`key: ${key}, value: ${value}`)
-            state.setItem(key, value)
-        } else {
-            console.warn('Invalid input !')
-        }
-    }
-
     return (
-        <div>
-            <p>
-                CPU: {sysDataStreamer.data.cpu_usage} | RAM:{' '}
-                {sysDataStreamer.data.ram_usage}
-            </p>
-            <p>{monitorName}</p>
-            <p>{activeWindow}</p>
-            <h1>Hello {state.getItem('user')} !!</h1>
-            <div>
-                <label htmlFor="get_key_input">Key: </label>
-                <input ref={getKeyInput} id="get_key_input" type="text" />
-                <span>Value:</span>
-                <span>{value ? value : 'None'}</span>
-                <button onClick={handleGetStateItem}>Get state item</button>
-            </div>
-            <div>
-                <label htmlFor="key_input">Key: </label>
-                <input ref={setKeyInput} id="key_input" type="text" />
-                <label htmlFor="value_input">Value: </label>
-                <input ref={setValueInput} id="value_input" type="text" />
-                <button onClick={handleSetStateItem}>Set state item</button>
-            </div>
-            <div>
-                <button onClick={state.save}>Save state</button>
-                <button onClick={testAction.run}>Test action</button>
-                <button onClick={runAction.run}>Explorer</button>
-            </div>
-            <div>
-                <img src={icons.firefox} width={64} />
-                <img src={icons.folder} width={64} />
+        <div className={styles.main_wrapper}>
+            <div className={styles.panel_wrapper}>
+                <div
+                    style={{
+                        display: 'flex',
+                        gap: '4px',
+                        color: '#cccccc',
+                        fontFamily: 'Fira Code',
+                        fontSize: '13px',
+                    }}
+                >
+                    <p style={{ marginLeft: '32px' }}>{windowTitle}</p>
+                </div>
+                <div></div>
+                <div style={{ display: 'flex', gap: '16px' }}>
+                    <p>
+                        <b>CPU:</b> {sysInfos.data.cpu_usage}%
+                    </p>
+                    <p>
+                        <b>RAM:</b> {sysInfos.data.ram_usage}%
+                    </p>
+                </div>
             </div>
         </div>
     )
