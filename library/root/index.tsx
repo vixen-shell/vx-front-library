@@ -57,9 +57,9 @@ export function create(container: HTMLElement) {
         const Feature = () => feature
 
         ReactDOM.createRoot(container).render(
-            <React.StrictMode>
-                <Feature />
-            </React.StrictMode>
+            // <React.StrictMode>
+            <Feature />
+            // </React.StrictMode>
         )
     }
 
