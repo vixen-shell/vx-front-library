@@ -4,12 +4,13 @@ import { SocketEventHandler, SocketEventData } from '../SocketEventHandler'
 
 export const useFeatureSocket = (
     featureName: string,
+    targetFeatureName: string,
     socketName: string,
     auto: boolean
 ) => {
     const socket = useRef<SocketEventHandler>(
         new SocketEventHandler(
-            ApiRoutes.feature_socket(featureName, socketName)
+            ApiRoutes.feature_socket(featureName, targetFeatureName, socketName)
         )
     )
 

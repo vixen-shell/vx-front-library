@@ -148,6 +148,7 @@ export class Feature {
             }>(
                 'DataStreamer',
                 useFeatureDataStreamer(
+                    Feature.featureName!,
                     featureName,
                     dataHandlers,
                     interval,
@@ -173,7 +174,12 @@ export class Feature {
         }: useSocketProps) {
             return $<SocketEventHandler>(
                 'Socket',
-                useFeatureSocket(featureName, socketName, auto)
+                useFeatureSocket(
+                    Feature.featureName!,
+                    featureName,
+                    socketName,
+                    auto
+                )
             )
         },
     }

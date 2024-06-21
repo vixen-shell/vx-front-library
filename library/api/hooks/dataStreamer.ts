@@ -9,6 +9,7 @@ export interface HandlerInfo {
 
 export const useFeatureDataStreamer = (
     featureName: string,
+    targetFeatureName: string,
     dataHandlers: HandlerInfo[],
     interval: number,
     auto: boolean
@@ -16,7 +17,9 @@ export const useFeatureDataStreamer = (
     const [data, setData] = useState<Record<string, any>>({})
 
     const socket = useRef<SocketEventHandler>(
-        new SocketEventHandler(ApiRoutes.feature_data_streamer(featureName))
+        new SocketEventHandler(
+            ApiRoutes.feature_data_streamer(featureName, targetFeatureName)
+        )
     )
 
     useEffect(() => {

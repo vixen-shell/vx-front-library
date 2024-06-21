@@ -43,12 +43,25 @@ export class ApiRoutes {
     }
 
     // WEBSOCKETS :: FEATURE CONTENTS
-    static feature_data_streamer(featureName: string) {
-        return uri('ws', `/feature/${featureName}/data_streamer`)
+    static feature_data_streamer(
+        featureName: string,
+        targetFeatureName: string
+    ) {
+        return uri(
+            'ws',
+            `/feature/${featureName}/data_streamer/${targetFeatureName}`
+        )
     }
 
-    static feature_socket(featureName: string, socketName: string) {
-        return uri('ws', `/feature/${featureName}/sockets/${socketName}`)
+    static feature_socket(
+        featureName: string,
+        targetFeatureName: string,
+        socketName: string
+    ) {
+        return uri(
+            'ws',
+            `/feature/${featureName}/sockets/${targetFeatureName}/${socketName}`
+        )
     }
 
     // ----------------------------------- - - -

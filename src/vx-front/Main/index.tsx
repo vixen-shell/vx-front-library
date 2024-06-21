@@ -24,7 +24,7 @@ export default function Main() {
         return () => {
             hyprSocket.removeEventListener('activewindow', onActiveWindow)
         }
-    }, [])
+    }, [hyprSocket])
 
     return (
         <div className={styles.main_wrapper}>
@@ -38,7 +38,10 @@ export default function Main() {
                         fontSize: '13px',
                     }}
                 >
-                    <p style={{ marginLeft: '32px' }}>{windowTitle}</p>
+                    <p style={{ marginLeft: '32px' }}>
+                        <b>Window: </b>
+                        {windowTitle}
+                    </p>
                 </div>
                 <div></div>
                 <div style={{ display: 'flex', gap: '16px' }}>
