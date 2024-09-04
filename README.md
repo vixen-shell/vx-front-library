@@ -1,2 +1,1 @@
-# vx-front-library
-vx-front-library
+# @vixen-front/base
