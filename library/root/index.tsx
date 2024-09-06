@@ -60,6 +60,12 @@ export function create(container: HTMLElement) {
 
     async function initFeature(feature: FeatureCallback) {
         await Api.init(urlParams.featureName!)
+        const prefer_dark_theme = await Api.prefer_dark_theme()
+
+        document.styleSheets[0].insertRule(
+            `#root { color: ${prefer_dark_theme ? '#EEEEEE' : '#111111'}; }`,
+            0
+        )
 
         insertFeature(
             feature(

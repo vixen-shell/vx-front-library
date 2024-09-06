@@ -50,6 +50,10 @@ export class Api {
         }
     }
 
+    static async prefer_dark_theme(): Promise<boolean> {
+        return await request(ApiRoutes.prefer_dark_theme)
+    }
+
     static get stateEvents() {
         if (Api._stateEvents) return Api._stateEvents
         throw new Error('Api not initialized')

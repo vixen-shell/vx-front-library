@@ -1,4 +1,4 @@
-import { Feature } from '../__library'
+import { Feature } from '../__lib'
 
 import Main from './Main'
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html style="box-sizing: border-box; height: 100vh">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,7 +8,15 @@
         <title>@vixen-front/base</title>
     </head>
     <body>
-        <div id="root"></div>
-        <script type="module" src="/src/main.tsx"></script>
+        <div
+            id="root"
+            style="
+                box-sizing: border-box !important;
+                display: block !important;
+                height: 100vh !important;
+                overflow: hidden !important;
+            "
+        ></div>
+        <script type="module" src="/src/main.jsx"></script>
     </body>
 </html>

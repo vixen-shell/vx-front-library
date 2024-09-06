@@ -8,6 +8,7 @@ export class ApiRoutes {
     // ENDPOINTS :: BASIC
     static readonly ping = uri('http', '/ping')
     static readonly shutdown = uri('http', '/shutdown')
+    static readonly prefer_dark_theme = uri('http', '/prefer_dark_theme')
 
     // ----------------------------------- - - -
     // ENDPOINTS :: FEATURES

@@ -1,5 +1,5 @@
 :root {
-    font-family: Ubuntu, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: 'Cantarell', 'Ubuntu', 'Liberation Sans', 'DejaVu Sans';
     line-height: 1.5;
     font-weight: 400;
 
@@ -8,19 +8,7 @@
 }
 
 * {
-    cursor: default;
     box-sizing: border-box;
     margin: 0;
-}
-
-#root {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
-}
-
-.ui_link {
-    color: #1ed89a;
+    cursor: default;
 }
