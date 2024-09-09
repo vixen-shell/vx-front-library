@@ -50,8 +50,14 @@ export class Api {
         }
     }
 
-    static async prefer_dark_theme(): Promise<boolean> {
-        return await request(ApiRoutes.prefer_dark_theme)
+    static async gtkDarkTheme(): Promise<boolean> {
+        return await request(ApiRoutes.gtk_dark_theme)
+    }
+    static async gtkDefaultFont(): Promise<{
+        font_family: string
+        font_size: number
+    }> {
+        return await request(ApiRoutes.gtk_default_font)
     }
 
     static get stateEvents() {
