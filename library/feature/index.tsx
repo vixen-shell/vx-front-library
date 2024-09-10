@@ -23,34 +23,6 @@ interface HandlerInfo {
     args?: any[]
 }
 
-interface useTaskProps {
-    feature?: string
-    handler: HandlerInfo
-}
-
-interface useDataProps {
-    feature?: string
-    handlers: HandlerInfo[]
-}
-
-interface useStreamProps {
-    feature?: string
-    handlers: HandlerInfo[]
-    interval?: number
-    auto?: boolean
-}
-
-interface useFilesProps {
-    feature?: string
-    handlers: Record<string, HandlerInfo>
-}
-
-interface useSocketProps {
-    feature?: string
-    name: string
-    auto?: boolean
-}
-
 function $<T>(name: string, reference: T) {
     if (!Feature.isInit) {
         throw new Error(`Cannot use '${name}' before feature initialization`)
@@ -122,27 +94,25 @@ export class Feature {
             }>('Frames', useFrames(feature))
         },
 
-        Task({ feature = Feature.featureName!, handler }: useTaskProps) {
+        Task(handler: HandlerInfo) {
             return $<{
-                run: () => () => void
-                isRunning: boolean
-                onTerminate: (callback: (data: any, error: any) => void) => void
-            }>('Task', useTask(feature, handler))
+                run: (args?: any[]) => () => void
+                afterRun: (callback: (data: any, error: any) => void) => void
+            }>('Task', useTask(Feature.featureName!, handler))
         },
 
-        Data({ feature = Feature.featureName!, handlers }: useDataProps) {
+        Data(handlers: HandlerInfo[]) {
             return $<{
                 update: () => void
                 data: Record<string, any>
-            }>('Data', useData(feature, handlers))
+            }>('Data', useData(Feature.featureName!, handlers))
         },
 
-        Stream({
-            feature = Feature.featureName!,
-            handlers,
-            interval = 1,
-            auto = true,
-        }: useStreamProps) {
+        Stream(
+            handlers: HandlerInfo[],
+            interval: number = 1,
+            auto: boolean = true
+        ) {
             return $<{
                 data: Record<string, any>
                 start: () => void
@@ -151,7 +121,7 @@ export class Feature {
                 'Stream',
                 useStream(
                     Feature.featureName!,
-                    feature,
+                    Feature.featureName!,
                     handlers,
                     interval,
                     auto
@@ -159,21 +129,22 @@ export class Feature {
             )
         },
 
-        Files({ feature = Feature.featureName!, handlers }: useFilesProps) {
+        Files(handlers: Record<string, HandlerInfo>) {
             return $<Record<string, string | undefined>>(
                 'Files',
-                useFiles(feature, handlers)
+                useFiles(Feature.featureName!, handlers)
             )
         },
 
-        Socket({
-            feature = Feature.featureName!,
-            name,
-            auto = true,
-        }: useSocketProps) {
+        Socket(name: string, auto: boolean = true) {
             return $<SocketEventHandler>(
                 'Socket',
-                useSocket(Feature.featureName!, feature, name, auto)
+                useSocket(
+                    Feature.featureName!,
+                    Feature.featureName!,
+                    name,
+                    auto
+                )
             )
         },
     }
