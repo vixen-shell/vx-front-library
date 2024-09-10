@@ -8,7 +8,6 @@ export class ApiRoutes {
     // ENDPOINTS :: BASIC
     static readonly ping = uri('http', '/ping')
     static readonly shutdown = uri('http', '/shutdown')
-    static readonly gtk_dark_theme = uri('http', '/gtk_dark_theme')
     static readonly gtk_default_font = uri('http', '/gtk_default_font')
 
     // ----------------------------------- - - -

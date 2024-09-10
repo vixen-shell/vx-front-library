@@ -60,21 +60,29 @@ export function create(container: HTMLElement) {
 
     async function initFeature(feature: FeatureCallback) {
         await Api.init(urlParams.featureName!)
-
-        const gtkDarkTheme = await Api.gtkDarkTheme()
         const gtkDefaultFont = await Api.gtkDefaultFont()
 
         const defaultFontFamily = gtkDefaultFont.font_family || 'sans-serif'
         const defaultFontSize = gtkDefaultFont.font_size || 12
-        const defaultColorFont = gtkDarkTheme ? '255, 255, 255' : '0, 0, 0'
 
         const style = document.createElement('style')
 
         style.textContent = `
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --default-font-color: rgba(255, 255, 255, 0.75);
+                }
+            }
+
+            @media (prefers-color-scheme: light) {
+                :root {
+                    --default-font-color: rgba(0, 0, 0, 0.75);
+                }
+            }
+
             :root {
                 --default-font-family: ${defaultFontFamily};
                 --default-font-size: ${defaultFontSize}pt;
-                --default-font-color: rgba(${defaultColorFont}, 0.8);
 
                 font-family: var(--default-font-family);
                 font-size: var(--default-font-size);
@@ -83,7 +91,7 @@ export function create(container: HTMLElement) {
                 user-select: none !important;
                 -webkit-user-select: none !important;
             }
-            
+
             * {
                 box-sizing: border-box;
                 cursor: default;
