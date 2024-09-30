@@ -1,3 +1,4 @@
+import '@mantine/core/styles.css'
 import ReactDOM from 'react-dom/client'
 import { ErrorFrame } from '../ui'
 import { GlobalStateType } from '../state'
@@ -7,6 +8,12 @@ type ImportCallback = (featureName: string | null) => Promise<any>
 
 type FeatureCallback = (
     featureName: string,
+    initialTheme: {
+        font_family: string
+        font_family_monospace: string
+        ui_scale: number
+        ui_color: string
+    },
     initialRoute: string,
     initialState: GlobalStateType | null
 ) => JSX.Element
@@ -60,50 +67,14 @@ export function create(container: HTMLElement) {
 
     async function initFeature(feature: FeatureCallback) {
         await Api.init(urlParams.featureName!)
-        const gtkDefaultFont = await Api.gtkDefaultFont()
+        const initialTheme = await Api.getInitialTheme()
 
-        const defaultFontFamily = gtkDefaultFont.font_family || 'sans-serif'
-        const defaultFontSize = gtkDefaultFont.font_size || 12
-
-        const style = document.createElement('style')
-
-        style.textContent = `
-            @media (prefers-color-scheme: dark) {
-                :root {
-                    --default-font-color: rgba(255, 255, 255, 0.75);
-                }
-            }
-
-            @media (prefers-color-scheme: light) {
-                :root {
-                    --default-font-color: rgba(0, 0, 0, 0.75);
-                }
-            }
-
-            :root {
-                --default-font-family: ${defaultFontFamily};
-                --default-font-size: ${defaultFontSize}pt;
-
-                font-family: var(--default-font-family);
-                font-size: var(--default-font-size);
-                color: var(--default-font-color);
-
-                user-select: none !important;
-                -webkit-user-select: none !important;
-            }
-
-            * {
-                box-sizing: border-box;
-                cursor: default;
-                margin: 0;
-            }
-        `
-
-        document.head.appendChild(style)
+        document.documentElement.style.zoom = String(initialTheme.ui_scale)
 
         insertFeature(
             feature(
                 urlParams.featureName!,
+                await Api.getInitialTheme(),
                 urlParams.initialRoute!,
                 await Api.getInitialState()
             )

@@ -50,13 +50,6 @@ export class Api {
         }
     }
 
-    static async gtkDefaultFont(): Promise<{
-        font_family: string
-        font_size: number
-    }> {
-        return await request(ApiRoutes.gtk_default_font)
-    }
-
     static get stateEvents() {
         if (Api._stateEvents) return Api._stateEvents
         throw new Error('Api not initialized')
@@ -68,5 +61,14 @@ export class Api {
         ).state
 
         return (initialState as GlobalStateType) || null
+    }
+
+    static async getInitialTheme(): Promise<{
+        font_family: string
+        font_family_monospace: string
+        ui_scale: number
+        ui_color: string
+    }> {
+        return await request(ApiRoutes.vx_theme)
     }
 }
