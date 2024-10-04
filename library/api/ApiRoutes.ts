@@ -10,6 +10,29 @@ export class ApiRoutes {
     static readonly shutdown = uri('http', '/shutdown')
     static readonly vx_theme = uri('http', '/vx_theme')
 
+    static system_icons(iconName: string) {
+        return uri('http', `/system_icons/${iconName}`)
+    }
+
+    static phosphor_icons(
+        iconName: string,
+        iconStyle:
+            | 'bold'
+            | 'duotone'
+            | 'fill'
+            | 'light'
+            | 'regular'
+            | 'thin'
+            | undefined = undefined
+    ) {
+        const params = iconStyle ? `?icon_style=${iconStyle}` : ''
+        return uri('http', `/phosphor_icons/${iconName}/${params}`)
+    }
+
+    static image_file(filePath: string) {
+        return uri('http', `/image_file/?filepath=${filePath}`)
+    }
+
     // ----------------------------------- - - -
     // ENDPOINTS :: FEATURES
     static readonly features_names = uri('http', '/features/names')

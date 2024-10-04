@@ -1,10 +1,12 @@
-import vixenLogo from '../../assets/vixen_logo.svg'
+import vixenLogo from './assets/vixen_logo.svg'
 
 interface ErrorFrameProps {
     message?: string
 }
 
-export default function ErrorFrame({ message }: ErrorFrameProps) {
+export const ErrorFrame: React.FC<ErrorFrameProps> = ({
+    message,
+}: ErrorFrameProps) => {
     return (
         <div
             style={{

@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css'
 import ReactDOM from 'react-dom/client'
-import { ErrorFrame } from '../ui'
+import { ErrorFrame } from '../components/ErrorFrame'
 import { GlobalStateType } from '../state'
 import { Api } from '../api'
 

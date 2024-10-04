@@ -1,4 +1,4 @@
-import { ErrorFrame } from '../ui'
+import { ErrorFrame } from '../components/ErrorFrame'
 import React, { createContext, useState } from 'react'
 
 export type RouteItemsType = { [key: string]: JSX.Element }
@@ -48,29 +48,3 @@ export const RouterProvider: React.FC<{
         </RouterContext.Provider>
     )
 }
-
-// export const useRouter = () => {
-//     const context = useContext(RouterContext)
-//     if (context) return context
-//     throw new Error('useRouter must be used within a RouterProvider.')
-// }
-
-// export const RouterRender = () => Routes.get(useRouter().route)
-
-// export const RouterLink: React.FC<{
-//     className?: string
-//     route: string
-//     children: React.ReactNode
-// }> = ({ className, route, children }) => {
-//     const { setRoute } = useRouter()
-
-//     return (
-//         <div
-//             className={`ui_link ${className}`}
-//             style={{ cursor: 'pointer' }}
-//             onClick={() => setRoute(route)}
-//         >
-//             {children}
-//         </div>
-//     )
-// }

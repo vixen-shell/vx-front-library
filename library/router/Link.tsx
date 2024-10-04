@@ -1,16 +1,14 @@
 import { useRouter } from './hook'
 
-export const RouterLink: React.FC<{
-    className?: string
+export const Link: React.FC<{
     route: string
     children: React.ReactNode
-}> = ({ className, route, children }) => {
+}> = ({ route, children }) => {
     const { setRoute } = useRouter()
 
     return (
         <div
-            className={`ui_link ${className}`}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: 'pointer !important' }}
             onClick={() => setRoute(route)}
         >
             {children}

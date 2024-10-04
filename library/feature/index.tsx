@@ -1,7 +1,7 @@
 import type { RouteItems } from '../router'
 import type { GlobalStateType } from '../state'
 
-import { Routes, useRouter, RouterLink } from '../router'
+import { Routes, useRouter, Link } from '../router'
 import { GlobalState, useGlobalState } from '../state'
 
 import {
@@ -72,7 +72,7 @@ export class Feature {
     }
 
     static get Link() {
-        return $<typeof RouterLink>('Link', RouterLink)
+        return $<typeof Link>('Link', Link)
     }
 
     static Use = {
