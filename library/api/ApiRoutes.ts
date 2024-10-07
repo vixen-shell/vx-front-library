@@ -8,7 +8,8 @@ export class ApiRoutes {
     // ENDPOINTS :: BASIC
     static readonly ping = uri('http', '/ping')
     static readonly shutdown = uri('http', '/shutdown')
-    static readonly vx_theme = uri('http', '/vx_theme')
+    static readonly gtk_fonts = uri('http', '/gtk_fonts')
+    static readonly vx_state = uri('http', '/vx_state')
 
     static system_icons(iconName: string) {
         return uri('http', `/system_icons/${iconName}`)
@@ -33,6 +34,9 @@ export class ApiRoutes {
         return uri('http', `/image_file/?filepath=${filePath}`)
     }
 
+    // WEBSOCKETS :: STATE
+    static readonly vx_state_socket = uri('ws', '/vx_state')
+
     // ----------------------------------- - - -
     // ENDPOINTS :: FEATURES
     static readonly features_names = uri('http', '/features/names')
@@ -45,19 +49,11 @@ export class ApiRoutes {
     static feature_stop(featureName: string) {
         return uri('http', `/feature/${featureName}/stop`)
     }
-    static feature_state(featureName: string) {
-        return uri('http', `/feature/${featureName}/state`)
-    }
     static feature_get_param(featureName: string, paramPath: string) {
         return uri('http', `/feature/${featureName}/get_param/${paramPath}`)
     }
     static feature_set_param(featureName: string, paramPath: string) {
         return uri('http', `/feature/${featureName}/set_param/${paramPath}`)
-    }
-
-    // WEBSOCKETS :: FEATURE STATE
-    static feature_state_socket(featureName: string) {
-        return uri('ws', `/feature/${featureName}/state`)
     }
 
     // ----------------------------------- - - -

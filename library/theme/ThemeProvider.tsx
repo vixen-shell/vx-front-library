@@ -2,52 +2,37 @@ import '@mantine/core/styles.css'
 import './globals.css'
 
 import { createTheme, MantineProvider } from '@mantine/core'
-import { createContext, useState } from 'react'
-
-interface ThemeContextProps {
-    setThemeColor: (color: string) => void
-}
-
-export const ThemeContext = createContext<ThemeContextProps | undefined>(
-    undefined
-)
+import { useGlobalState } from '../state'
+import { useEffect } from 'react'
 
 interface ThemeProviderProps {
-    initialTheme: {
+    fonts: {
         font_family: string
         font_family_monospace: string
-        ui_scale: number
-        ui_color: string
     }
     children: React.ReactNode
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({
-    initialTheme,
+    fonts,
     children,
 }) => {
-    const [theme, setTheme] = useState(
-        createTheme({
-            fontFamily: initialTheme.font_family,
-            fontFamilyMonospace: initialTheme.font_family_monospace,
-            primaryColor: initialTheme.ui_color,
-        })
-    )
+    const { getItem } = useGlobalState()
 
-    const setThemeColor = (color: string) => {
-        setTheme(
-            createTheme({
-                primaryColor: color,
-                fontFamily: initialTheme.font_family,
-            })
-        )
-    }
+    useEffect(() => {
+        document.documentElement.style.zoom = String(getItem('vx_ui_scale'))
+    }, [getItem])
 
     return (
-        <ThemeContext.Provider value={{ setThemeColor }}>
-            <MantineProvider theme={theme} defaultColorScheme="auto">
-                {children}
-            </MantineProvider>
-        </ThemeContext.Provider>
+        <MantineProvider
+            theme={createTheme({
+                fontFamily: fonts.font_family,
+                fontFamilyMonospace: fonts.font_family_monospace,
+                primaryColor: getItem('vx_ui_color'),
+            })}
+            defaultColorScheme="auto"
+        >
+            {children}
+        </MantineProvider>
     )
 }

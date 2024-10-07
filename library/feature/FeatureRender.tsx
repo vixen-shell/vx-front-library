@@ -3,33 +3,20 @@ import { RouterProvider, RouterRender } from '../router'
 import { ThemeProvider } from '../theme'
 
 const FeatureRender: React.FC<{
-    initialTheme: {
+    gtkFonts: {
         font_family: string
         font_family_monospace: string
-        ui_scale: number
-        ui_color: string
     }
     initialRoute: string
-    state: boolean
-}> = ({ initialTheme, initialRoute, state }) => {
-    const BaseRender = () => (
-        <RouterProvider initialRoute={initialRoute}>
-            <RouterRender />
-        </RouterProvider>
-    )
-
-    const Render = state
-        ? () => (
-              <GlobalStateProvider>
-                  <BaseRender />
-              </GlobalStateProvider>
-          )
-        : BaseRender
-
+}> = ({ gtkFonts, initialRoute }) => {
     return (
-        <ThemeProvider initialTheme={initialTheme}>
-            <Render />
-        </ThemeProvider>
+        <GlobalStateProvider>
+            <ThemeProvider fonts={gtkFonts}>
+                <RouterProvider initialRoute={initialRoute}>
+                    <RouterRender />
+                </RouterProvider>
+            </ThemeProvider>
+        </GlobalStateProvider>
     )
 }
 

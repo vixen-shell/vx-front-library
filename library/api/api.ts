@@ -29,9 +29,7 @@ export class Api {
 
         Api.currentFeatureName = featureName
 
-        Api._stateEvents = new SocketEventHandler(
-            ApiRoutes.feature_state_socket(Api.currentFeatureName)
-        )
+        Api._stateEvents = new SocketEventHandler(ApiRoutes.vx_state_socket)
         Api._stateEvents.connect()
 
         Api._isInit = true
@@ -55,20 +53,16 @@ export class Api {
         throw new Error('Api not initialized')
     }
 
-    static async getInitialState(): Promise<GlobalStateType | null> {
-        const initialState = (
-            await request(ApiRoutes.feature_state(Api.currentFeatureName!))
-        ).state
+    static async getInitialState(): Promise<GlobalStateType> {
+        const initialState = await request(ApiRoutes.vx_state)
 
-        return (initialState as GlobalStateType) || null
+        return initialState as GlobalStateType
     }
 
-    static async getInitialTheme(): Promise<{
+    static async getGtkFonts(): Promise<{
         font_family: string
         font_family_monospace: string
-        ui_scale: number
-        ui_color: string
     }> {
-        return await request(ApiRoutes.vx_theme)
+        return await request(ApiRoutes.gtk_fonts)
     }
 }

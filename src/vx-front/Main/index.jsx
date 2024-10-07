@@ -1,9 +1,16 @@
 import '@mantine/core/styles.css'
-import { Text, Button, RingProgress, useMantineTheme } from '@mantine/core'
+import {
+    Text,
+    Title,
+    Button,
+    RingProgress,
+    useMantineTheme,
+} from '@mantine/core'
 
-import { ui } from '../../__lib'
+import { ui, Feature } from '../../__lib'
 
 const Content = () => {
+    const state = Feature.Use.State()
     const theme = useMantineTheme()
 
     return (
@@ -19,14 +26,52 @@ const Content = () => {
                 padding: '16px',
             }}
         >
-            <h1>Hello !!!</h1>
-            <p>This is the Main Feature.</p>
-            <Text size="xs">Text xs</Text>
-            <Text size="sm">Text sm</Text>
-            <Text size="md">Text md</Text>
-            <Text size="lg">Text lg</Text>
-            <Text size="xl">Text xl</Text>
-            <Button variant="light">OK</Button>
+            <Title order={2}>Hello !!!</Title>
+            <Text size="sm">This is the Main Feature</Text>
+            <Button
+                variant="light"
+                onClick={() => {
+                    if (state.getItem('vx_ui_icons') === 'regular') {
+                        state.setItem('vx_ui_icons', 'thin')
+                    } else {
+                        state.setItem('vx_ui_icons', 'regular')
+                    }
+                }}
+            >
+                Toggle Ui Icons
+            </Button>
+            <Button
+                variant="light"
+                onClick={() => {
+                    if (state.getItem('vx_ui_scale') === '1.0') {
+                        state.setItem('vx_ui_scale', '0.85')
+                    } else {
+                        state.setItem('vx_ui_scale', '1.0')
+                    }
+                }}
+            >
+                Toggle Ui Scale
+            </Button>
+            <Button
+                variant="light"
+                onClick={() => {
+                    if (state.getItem('vx_ui_color') === 'teal') {
+                        state.setItem('vx_ui_color', 'orange')
+                    } else {
+                        state.setItem('vx_ui_color', 'teal')
+                    }
+                }}
+            >
+                Toggle Ui Color
+            </Button>
+            <Button
+                variant="light"
+                onClick={() => {
+                    state.save()
+                }}
+            >
+                Save Vixen State
+            </Button>
             <div>
                 <RingProgress
                     size={32}

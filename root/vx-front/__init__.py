@@ -10,6 +10,5 @@ feature.init(
                 "route": "main",
             }
         },
-        "state": "disable",
     }
 )

@@ -43,23 +43,21 @@ export class Feature {
 
         const feature = (
             featureName: string,
-            initialTheme: {
+            gtkFonts: {
                 font_family: string
                 font_family_monospace: string
-                ui_scale: number
-                ui_color: string
             },
             initialRoute: string,
-            initialState: GlobalStateType | null
+            initialState: GlobalStateType
         ) => {
             Feature.isInit = true
             Feature.featureName = featureName
-            if (initialState) GlobalState.initialState = initialState
+            GlobalState.initialState = initialState
+
             return (
                 <FeatureRender
-                    initialTheme={initialTheme}
+                    gtkFonts={gtkFonts}
                     initialRoute={initialRoute}
-                    state={Boolean(initialState)}
                 />
             )
         }

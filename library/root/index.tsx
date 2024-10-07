@@ -8,14 +8,12 @@ type ImportCallback = (featureName: string | null) => Promise<any>
 
 type FeatureCallback = (
     featureName: string,
-    initialTheme: {
+    gtkFonts: {
         font_family: string
         font_family_monospace: string
-        ui_scale: number
-        ui_color: string
     },
     initialRoute: string,
-    initialState: GlobalStateType | null
+    initialState: GlobalStateType
 ) => JSX.Element
 
 function getUrlParams() {
@@ -67,16 +65,17 @@ export function create(container: HTMLElement) {
 
     async function initFeature(feature: FeatureCallback) {
         await Api.init(urlParams.featureName!)
-        const initialTheme = await Api.getInitialTheme()
+        const gtkFonts = await Api.getGtkFonts()
+        const initialState = await Api.getInitialState()
 
-        document.documentElement.style.zoom = String(initialTheme.ui_scale)
+        // document.documentElement.style.zoom = String(initialState.vx_ui_scale)
 
         insertFeature(
             feature(
                 urlParams.featureName!,
-                await Api.getInitialTheme(),
+                gtkFonts,
                 urlParams.initialRoute!,
-                await Api.getInitialState()
+                initialState
             )
         )
     }

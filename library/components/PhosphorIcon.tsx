@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { ApiRoutes } from '../api/ApiRoutes'
 import { ImageBroken } from './ImageBroken'
+import { useGlobalState } from '../state'
 
 async function fetchIcon(
     iconName: string,
@@ -72,16 +73,26 @@ export const PhosphorIcon: React.FC<{
     size: number
     color: string | undefined
 }> = ({ iconName, iconStyle = undefined, size = 32, color = undefined }) => {
+    const { getItem } = useGlobalState()
     const [fetchError, setFetchError] = useState<boolean>(false)
     const [iconBlob, setIconBlob] = useState<Blob | null>(null)
+    const [style, setStyle] = useState<
+        'bold' | 'duotone' | 'fill' | 'light' | 'regular' | 'thin' | undefined
+    >(getItem('vx_ui_icons'))
     const iconContainer = useRef<HTMLDivElement>(document.createElement('div'))
+
+    useEffect(() => {
+        if (!iconStyle) {
+            setStyle(getItem('vx_ui_icons'))
+        }
+    }, [getItem, iconStyle])
 
     useEffect(() => {
         ;(async () => {
             setFetchError(false)
 
             try {
-                setIconBlob(await fetchIcon(iconName, iconStyle))
+                setIconBlob(await fetchIcon(iconName, iconStyle || style))
             } catch (error: any) {
                 console.error(error)
                 setFetchError(true)
@@ -89,7 +100,7 @@ export const PhosphorIcon: React.FC<{
         })()
 
         return () => setIconBlob(null)
-    }, [iconName, iconStyle])
+    }, [iconName, iconStyle, style])
 
     useEffect(() => {
         const container = iconContainer.current
