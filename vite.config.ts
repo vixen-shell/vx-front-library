@@ -68,7 +68,6 @@ export default defineConfig({
                 'react/jsx-runtime',
                 '@mantine/core',
                 '@mantine/hooks',
-                '@tabler/core',
             ],
             input: Object.fromEntries(
                 getFiles('library').map((file) => [

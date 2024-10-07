@@ -7,9 +7,9 @@ import {
     useMantineTheme,
 } from '@mantine/core'
 
-import { ui, Feature } from '../../__lib'
+import { Feature, Icon, SysIcon, ImageFile } from '../../__lib'
 
-const Content = () => {
+const Main = () => {
     const state = Feature.Use.State()
     const theme = useMantineTheme()
 
@@ -80,24 +80,24 @@ const Content = () => {
                     sections={[{ value: 40, color: theme.primaryColor }]}
                 />
             </div>
-            <ui.Icon iconName="image" color={theme.primaryColor} size={64} />
-            <ui.SysIcon iconName="firefox" size={64} />
+            <Icon iconName="image" color={theme.primaryColor} size={64} />
+            <SysIcon iconName="firefox" size={64} />
             <div style={{ display: 'flex', gap: '10px' }}>
-                <ui.ImageFile
+                <ImageFile
                     filePath="/home/noha/Images/Wallpapers/cat-background_(1).jpg"
                     radius={16}
                     width={200}
                     height={200}
                     fit="cover"
                 />
-                <ui.ImageFile
+                <ImageFile
                     filePath="/home/noha/Images/Wallpapers/cat-background_(2).jpg"
                     radius={16}
                     width={200}
                     height={200}
                     fit="cover"
                 />
-                <ui.ImageFile
+                <ImageFile
                     filePath="/home/noha/Images/Wallpapers/cat-background_(3).jpg"
                     radius={16}
                     width={200}
@@ -106,14 +106,6 @@ const Content = () => {
                 />
             </div>
         </div>
-    )
-}
-
-const Main = () => {
-    return (
-        <ui.AppShell>
-            <Content />
-        </ui.AppShell>
     )
 }
 
