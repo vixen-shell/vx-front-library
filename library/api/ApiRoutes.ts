@@ -64,9 +64,6 @@ export class ApiRoutes {
     static feature_data(featureName: string) {
         return uri('http', `/feature/${featureName}/data`)
     }
-    static feature_file(featureName: string) {
-        return uri('http', `/feature/${featureName}/file`)
-    }
 
     // WEBSOCKETS :: FEATURE CONTENTS
     static feature_data_streamer(

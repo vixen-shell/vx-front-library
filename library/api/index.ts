@@ -8,7 +8,6 @@ export {
     useTask,
     useData,
     useStream,
-    useFiles,
     useSocket,
     useFrames,
     useParams,

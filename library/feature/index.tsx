@@ -9,7 +9,6 @@ import {
     useTask,
     useData,
     useStream,
-    useFiles,
     useSocket,
     useFrames,
     useParams,
@@ -131,13 +130,6 @@ export class Feature {
                     interval,
                     auto
                 )
-            )
-        },
-
-        Files(handlers: Record<string, HandlerInfo>) {
-            return $<Record<string, string | undefined>>(
-                'Files',
-                useFiles(Feature.featureName!, handlers)
             )
         },
 
