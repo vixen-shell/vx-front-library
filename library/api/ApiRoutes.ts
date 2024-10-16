@@ -36,6 +36,7 @@ export class ApiRoutes {
 
     // WEBSOCKETS :: STATE
     static readonly vx_state_socket = uri('ws', '/vx_state')
+    static readonly vx_systray_socket = uri('ws', '/vx_systray')
 
     // ----------------------------------- - - -
     // ENDPOINTS :: FEATURES
@@ -63,6 +64,9 @@ export class ApiRoutes {
     }
     static feature_data(featureName: string) {
         return uri('http', `/feature/${featureName}/data`)
+    }
+    static feature_dbus_menu(featureName: string) {
+        return uri('http', `/feature/${featureName}/dbus_menu`)
     }
 
     // WEBSOCKETS :: FEATURE CONTENTS

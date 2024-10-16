@@ -7,7 +7,7 @@ import {
     useMantineTheme,
 } from '@mantine/core'
 
-import { Feature, Icon, SysIcon, ImageFile } from '../../__lib'
+import { Feature, Icon, SysIcon, ImageFile, SysTray } from '../../__lib'
 
 const Main = () => {
     const state = Feature.Use.State()
@@ -105,6 +105,7 @@ const Main = () => {
                     fit="cover"
                 />
             </div>
+            <SysTray iconSize={24} />
         </div>
     )
 }

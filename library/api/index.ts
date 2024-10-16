@@ -11,6 +11,8 @@ export {
     useSocket,
     useFrames,
     useParams,
+    useSystray,
+    useDbusMenu,
 } from './hooks'
 
 export { Api } from './api'
