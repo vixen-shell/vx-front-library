@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { useSystray, useDbusMenu } from '../api'
+import { useSystray, useDbusMenu, useTooltip } from '../api'
 import { SystemIcon } from './SystemIcon'
 
 const SysTrayItem: React.FC<{
@@ -12,6 +12,7 @@ const SysTrayItem: React.FC<{
     iconSize: number
 }> = ({ item, iconSize }) => {
     const menu = useDbusMenu(item.service_name)
+    const tooltip = useTooltip()
     const divRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -40,7 +41,11 @@ const SysTrayItem: React.FC<{
     }, [divRef, item.status])
 
     return item.status !== 'passive' ? (
-        <div ref={divRef} onClick={() => menu.popup()}>
+        <div
+            ref={divRef}
+            onClick={() => menu.popup()}
+            onMouseEnter={() => tooltip.show(item.tooltip)}
+        >
             <SystemIcon iconName={item.icon_name} size={iconSize} />
         </div>
     ) : (

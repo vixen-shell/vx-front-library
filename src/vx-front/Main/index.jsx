@@ -11,6 +11,8 @@ import { Feature, Icon, SysIcon, ImageFile, SysTray } from '../../__lib'
 
 const Main = () => {
     const state = Feature.Use.State()
+    const menu = Feature.Use.Menu()
+    const tooltip = Feature.Use.Tooltip()
     const theme = useMantineTheme()
 
     return (
@@ -72,7 +74,19 @@ const Main = () => {
             >
                 Save Vixen State
             </Button>
-            <div>
+            <Button
+                variant="light"
+                onClick={() => {
+                    menu.popup('menu_test')
+                }}
+            >
+                Popup menu
+            </Button>
+            <div
+                onMouseEnter={() => {
+                    tooltip.show('Hello !!!')
+                }}
+            >
                 <RingProgress
                     size={32}
                     thickness={3}

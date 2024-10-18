@@ -12,6 +12,8 @@ export {
     useFrames,
     useParams,
     useSystray,
+    useTooltip,
+    useMenu,
     useDbusMenu,
 } from './hooks'
 

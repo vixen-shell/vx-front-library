@@ -12,6 +12,8 @@ import {
     useSocket,
     useFrames,
     useParams,
+    useMenu,
+    useTooltip,
     SocketEventHandler,
 } from '../api'
 
@@ -131,6 +133,17 @@ export class Feature {
                     auto
                 )
             )
+        },
+
+        Tooltip() {
+            return $<{ show: (text: string) => () => void }>(
+                'Tooltip',
+                useTooltip()
+            )
+        },
+
+        Menu() {
+            return $<{ popup: (name: string) => () => void }>('Menu', useMenu())
         },
 
         Socket(name: string, auto: boolean = true) {
