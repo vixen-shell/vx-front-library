@@ -13,7 +13,6 @@ import {
     useFrames,
     useParams,
     useMenu,
-    useTooltip,
     SocketEventHandler,
 } from '../api'
 
@@ -132,13 +131,6 @@ export class Feature {
                     interval,
                     auto
                 )
-            )
-        },
-
-        Tooltip() {
-            return $<{ show: (text: string) => () => void }>(
-                'Tooltip',
-                useTooltip()
             )
         },
 

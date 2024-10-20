@@ -1,6 +1,15 @@
 import { useEffect, useRef } from 'react'
-import { useSystray, useDbusMenu, useTooltip } from '../api'
+import { useSystray, useDbusMenu } from '../api'
 import { SystemIcon } from './SystemIcon'
+
+interface SysTrayProps
+    extends Omit<React.HTMLAttributes<HTMLDivElement>, 'style' | 'title'> {
+    style?: React.CSSProperties
+    direction?: 'row' | 'column'
+    iconSize?: string | number
+    gap?: string | number
+    tooltip?: boolean
+}
 
 const SysTrayItem: React.FC<{
     item: {
@@ -9,10 +18,10 @@ const SysTrayItem: React.FC<{
         tooltip: string
         status: string
     }
-    iconSize: number
-}> = ({ item, iconSize }) => {
+    iconSize: string | number
+    tooltip?: boolean
+}> = ({ item, iconSize, tooltip = false }) => {
     const menu = useDbusMenu(item.service_name)
-    const tooltip = useTooltip()
     const divRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -44,7 +53,7 @@ const SysTrayItem: React.FC<{
         <div
             ref={divRef}
             onClick={() => menu.popup()}
-            onMouseEnter={() => tooltip.show(item.tooltip)}
+            title={tooltip ? item.tooltip : undefined}
         >
             <SystemIcon iconName={item.icon_name} size={iconSize} />
         </div>
@@ -53,19 +62,24 @@ const SysTrayItem: React.FC<{
     )
 }
 
-export const SysTray: React.FC<{
-    direction?: 'row' | 'column'
-    iconSize?: number
-    gap?: number
-}> = ({ direction = 'row', iconSize = 16, gap = 8 }) => {
+export const SysTray: React.FC<SysTrayProps> = ({
+    style = undefined,
+    direction = undefined,
+    iconSize = 16,
+    gap = undefined,
+    tooltip = false,
+    ...props
+}) => {
     const systray = useSystray()
 
     return (
         <div
+            {...props}
             style={{
+                ...style,
                 display: 'flex',
                 flexDirection: direction,
-                gap: `${gap}px`,
+                gap: gap,
             }}
         >
             {systray.map((item) => (
@@ -78,6 +92,7 @@ export const SysTray: React.FC<{
                         status: item.status,
                     }}
                     iconSize={iconSize}
+                    tooltip={tooltip}
                 />
             ))}
         </div>

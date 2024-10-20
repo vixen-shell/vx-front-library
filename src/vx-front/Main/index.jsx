@@ -12,7 +12,6 @@ import { Feature, Icon, SysIcon, ImageFile, SysTray } from '../../__lib'
 const Main = () => {
     const state = Feature.Use.State()
     const menu = Feature.Use.Menu()
-    const tooltip = Feature.Use.Tooltip()
     const theme = useMantineTheme()
 
     return (
@@ -82,11 +81,7 @@ const Main = () => {
             >
                 Popup menu
             </Button>
-            <div
-                onMouseEnter={() => {
-                    tooltip.show('Hello !!!')
-                }}
-            >
+            <div>
                 <RingProgress
                     size={32}
                     thickness={3}
@@ -94,10 +89,19 @@ const Main = () => {
                     sections={[{ value: 40, color: theme.primaryColor }]}
                 />
             </div>
-            <Icon iconName="image" color={theme.primaryColor} size={64} />
-            <SysIcon iconName="firefox" size={64} />
+            <Icon
+                iconName="image"
+                color={theme.primaryColor}
+                size={64}
+                title="Phosphore Icon"
+            />
+            <SysIcon iconName="firefox" size={64} title="System Icon" />
             <div style={{ display: 'flex', gap: '10px' }}>
                 <ImageFile
+                    title="Image de chat"
+                    style={{
+                        border: '1px solid red',
+                    }}
                     filePath="/home/noha/Images/Wallpapers/cat-background_(1).jpg"
                     radius={16}
                     width={200}
@@ -119,7 +123,7 @@ const Main = () => {
                     fit="cover"
                 />
             </div>
-            <SysTray iconSize={24} />
+            <SysTray iconSize={20} gap={4} tooltip />
         </div>
     )
 }

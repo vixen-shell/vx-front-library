@@ -3,6 +3,15 @@ import { ApiRoutes } from '../api/ApiRoutes'
 import { ImageBroken } from './ImageBroken'
 import { useGlobalState } from '../state'
 
+interface PhosphorIconProps
+    extends Omit<React.HTMLAttributes<HTMLDivElement>, 'style'> {
+    iconName: string
+    style?: React.CSSProperties
+    iconStyle?: 'bold' | 'duotone' | 'fill' | 'light' | 'regular' | 'thin'
+    size?: string | number
+    color?: string
+}
+
 async function fetchIcon(
     iconName: string,
     iconStyle:
@@ -60,30 +69,25 @@ function colorizeSvgElement(svgElement: HTMLElement, color: string) {
     svgElement.setAttribute('fill', color)
 }
 
-export const PhosphorIcon: React.FC<{
-    iconName: string
-    iconStyle:
-        | 'bold'
-        | 'duotone'
-        | 'fill'
-        | 'light'
-        | 'regular'
-        | 'thin'
-        | undefined
-    size: number
-    color: string | undefined
-}> = ({ iconName, iconStyle = undefined, size = 32, color = undefined }) => {
+export const PhosphorIcon: React.FC<PhosphorIconProps> = ({
+    iconName,
+    style = undefined,
+    iconStyle = undefined,
+    size = 32,
+    color = undefined,
+    ...props
+}) => {
     const { getItem } = useGlobalState()
     const [fetchError, setFetchError] = useState<boolean>(false)
     const [iconBlob, setIconBlob] = useState<Blob | null>(null)
-    const [style, setStyle] = useState<
+    const [iStyle, setIStyle] = useState<
         'bold' | 'duotone' | 'fill' | 'light' | 'regular' | 'thin' | undefined
     >(getItem('vx_ui_icons'))
     const iconContainer = useRef<HTMLDivElement>(document.createElement('div'))
 
     useEffect(() => {
         if (!iconStyle) {
-            setStyle(getItem('vx_ui_icons'))
+            setIStyle(getItem('vx_ui_icons'))
         }
     }, [getItem, iconStyle])
 
@@ -92,7 +96,7 @@ export const PhosphorIcon: React.FC<{
             setFetchError(false)
 
             try {
-                setIconBlob(await fetchIcon(iconName, iconStyle || style))
+                setIconBlob(await fetchIcon(iconName, iconStyle || iStyle))
             } catch (error: any) {
                 console.error(error)
                 setFetchError(true)
@@ -100,7 +104,7 @@ export const PhosphorIcon: React.FC<{
         })()
 
         return () => setIconBlob(null)
-    }, [iconName, iconStyle, style])
+    }, [iconName, iconStyle, iStyle])
 
     useEffect(() => {
         const container = iconContainer.current
@@ -127,6 +131,10 @@ export const PhosphorIcon: React.FC<{
     return fetchError ? (
         <ImageBroken size={size} color="grey" />
     ) : (
-        <div style={{ width: size, height: size }} ref={iconContainer}></div>
+        <div
+            {...props}
+            style={{ ...style, width: size, height: size }}
+            ref={iconContainer}
+        ></div>
     )
 }

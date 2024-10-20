@@ -2,6 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 import { ApiRoutes } from '../api/ApiRoutes'
 import { ImageBroken } from './ImageBroken'
 
+interface SystemIconProps
+    extends Omit<React.HTMLAttributes<HTMLDivElement>, 'style'> {
+    iconName: string
+    style?: React.CSSProperties
+    size?: string | number
+}
+
 async function fetchIcon(iconName: string): Promise<Blob> {
     const response = await fetch(ApiRoutes.system_icons(iconName))
 
@@ -50,10 +57,12 @@ function createSvgElement(data: string) {
     return svgElement
 }
 
-export const SystemIcon: React.FC<{
-    iconName: string
-    size: number
-}> = ({ iconName, size = 32 }) => {
+export const SystemIcon: React.FC<SystemIconProps> = ({
+    iconName,
+    style = undefined,
+    size = 32,
+    ...props
+}) => {
     const [fetchError, setFetchError] = useState<boolean>(false)
     const [iconBlob, setIconBlob] = useState<Blob | null>(null)
     const iconContainer = useRef<HTMLDivElement>(document.createElement('div'))
@@ -97,6 +106,10 @@ export const SystemIcon: React.FC<{
     return fetchError ? (
         <ImageBroken size={size} color="grey" />
     ) : (
-        <div style={{ width: size, height: size }} ref={iconContainer}></div>
+        <div
+            {...props}
+            style={{ ...style, width: size, height: size }}
+            ref={iconContainer}
+        ></div>
     )
 }

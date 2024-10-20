@@ -65,9 +65,6 @@ export class ApiRoutes {
     static feature_data(featureName: string) {
         return uri('http', `/feature/${featureName}/data`)
     }
-    static feature_tooltip(featureName: string) {
-        return uri('http', `/feature/${featureName}/tooltip`)
-    }
     static feature_menu(featureName: string) {
         return uri('http', `/feature/${featureName}/menu`)
     }

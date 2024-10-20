@@ -1,6 +1,6 @@
 export const ImageBroken: React.FC<{
     color: string
-    size: number
+    size: string | number
 }> = ({ color = 'currentColor', size = 32 }) => {
     return (
         <svg

@@ -1,22 +1,31 @@
 import { ImageBroken } from './ImageBroken'
 import { useImageFile } from './hooks'
 
-export const ImageFile: React.FC<{
+interface ImageFileProps
+    extends Omit<
+        React.ImgHTMLAttributes<HTMLImageElement>,
+        'style' | 'width' | 'height' | 'src'
+    > {
     filePath: string
-    width?: number
-    height?: number
-    minWidth?: number
-    minHeight?: number
-    radius?: number
+    style?: React.CSSProperties
+    width?: string | number
+    height?: string | number
+    minWidth?: string | number
+    minHeight?: string | number
+    radius?: string | number
     fit?: 'fill' | 'contain' | 'cover'
-}> = ({
+}
+
+export const ImageFile: React.FC<ImageFileProps> = ({
     filePath,
+    style = undefined,
     width = undefined,
     height = undefined,
     minWidth = undefined,
     minHeight = undefined,
-    radius = 0,
+    radius = undefined,
     fit = 'fill',
+    ...props
 }) => {
     const { url, error } = useImageFile(filePath)
 
@@ -29,7 +38,7 @@ export const ImageFile: React.FC<{
                 flexDirection: 'column',
                 gap: '10px',
                 border: '1px dashed grey',
-                borderRadius: `${radius}px`,
+                borderRadius: radius,
                 width: width || 'auto',
                 height: height || 'auto',
                 padding: '10px',
@@ -52,15 +61,17 @@ export const ImageFile: React.FC<{
         <div
             style={{
                 backgroundColor: '#00000033',
-                borderRadius: `${radius}px`,
+                borderRadius: radius,
                 width: width || 'auto',
                 height: height || 'auto',
             }}
         ></div>
     ) : (
         <img
+            {...props}
             style={{
-                borderRadius: `${radius}px`,
+                ...style,
+                borderRadius: radius,
                 objectFit: fit,
                 minWidth: minWidth || width || 'auto',
                 minHeight: minHeight || height || 'auto',
