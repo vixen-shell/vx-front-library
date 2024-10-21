@@ -56,6 +56,9 @@ export class ApiRoutes {
     static feature_set_param(featureName: string, paramPath: string) {
         return uri('http', `/feature/${featureName}/set_param/${paramPath}`)
     }
+    static feature_save_params(featureName: string) {
+        return uri('http', `/feature/${featureName}/save_params`)
+    }
 
     // ----------------------------------- - - -
     // ENDPOINTS :: FEATURE CONTENTS
@@ -73,14 +76,8 @@ export class ApiRoutes {
     }
 
     // WEBSOCKETS :: FEATURE CONTENTS
-    static feature_data_streamer(
-        featureName: string,
-        targetFeatureName: string
-    ) {
-        return uri(
-            'ws',
-            `/feature/${featureName}/data_streamer/${targetFeatureName}`
-        )
+    static feature_data_streamer(featureName: string) {
+        return uri('ws', `/feature/${featureName}/data_streamer`)
     }
 
     static feature_socket(

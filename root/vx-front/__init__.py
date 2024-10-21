@@ -1,3 +1,4 @@
+import psutil
 from vx_root import root_feature, ContextMenu, root_content
 
 feature = root_feature()
@@ -30,3 +31,28 @@ def menu_test():
     }
 
     return menu_test
+
+
+@content.dispatch("data")
+def hello(name: str = ""):
+    return f"Hello {name}!!!"
+
+
+@content.dispatch("data")
+def good_bye():
+    return "Good bye !!!"
+
+
+@content.dispatch("data")
+def cpu_usage(percpu: bool = False) -> float | list[float]:
+    return psutil.cpu_percent(percpu=percpu)
+
+
+@content.dispatch("data")
+def ram_usage() -> float:
+    return psutil.virtual_memory().percent
+
+
+@content.dispatch("task")
+def print_hello(name: str = ""):
+    print(f"Hello {name}!!!")

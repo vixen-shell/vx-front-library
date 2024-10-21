@@ -8,7 +8,6 @@ import {
     Api,
     useTask,
     useData,
-    useStream,
     useSocket,
     useFrames,
     useParams,
@@ -17,11 +16,6 @@ import {
 } from '../api'
 
 import FeatureRender from './FeatureRender'
-
-interface HandlerInfo {
-    name: string
-    args?: any[]
-}
 
 function $<T>(name: string, reference: T) {
     if (!Feature.isInit) {
@@ -84,8 +78,9 @@ export class Feature {
 
         Params(paths: string[]) {
             return $<{
-                params: Record<string, any>
-                setParam: (paramPath: string, value: any) => () => void
+                get: (path: string) => any
+                set: (path: string, value: any) => () => void
+                save: () => () => void
             }>('Params', useParams(Feature.featureName!, paths))
         },
 
@@ -99,39 +94,19 @@ export class Feature {
             }>('Frames', useFrames(feature))
         },
 
-        Task(handler: HandlerInfo) {
+        Task() {
             return $<{
-                run: (args?: any[]) => () => void
+                run: (name: string, args?: any[]) => () => void
                 afterRun: (callback: (data: any, error: any) => void) => void
-            }>('Task', useTask(Feature.featureName!, handler))
+            }>('Task', useTask())
         },
 
-        Data(handlers: HandlerInfo[]) {
+        Data() {
             return $<{
-                update: () => void
-                data: Record<string, any>
-            }>('Data', useData(Feature.featureName!, handlers))
-        },
-
-        Stream(
-            handlers: HandlerInfo[],
-            interval: number = 1,
-            auto: boolean = true
-        ) {
-            return $<{
-                data: Record<string, any>
-                start: () => void
-                stop: () => void
-            }>(
-                'Stream',
-                useStream(
-                    Feature.featureName!,
-                    Feature.featureName!,
-                    handlers,
-                    interval,
-                    auto
-                )
-            )
+                get: (name: string, args?: any[]) => any
+                stream: (name: string, args?: any[]) => any
+                setInterval: (value: number) => void
+            }>('Data', useData())
         },
 
         Menu() {

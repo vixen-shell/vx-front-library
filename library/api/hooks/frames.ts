@@ -5,10 +5,6 @@ export const useFrames = (feature: string) => {
     const [ids, setIds] = useState<string[]>([])
     const [actives, setActives] = useState<string[]>([])
 
-    useEffect(() => {
-        update()
-    }, [])
-
     const request = useCallback(async (route: string, signal: AbortSignal) => {
         const response = await fetch(route, { signal: signal })
 
@@ -41,7 +37,7 @@ export const useFrames = (feature: string) => {
         })()
 
         return () => controller.abort()
-    }, [feature])
+    }, [feature, request])
 
     const toggle = useCallback(
         (frameId: string) => {
@@ -63,7 +59,7 @@ export const useFrames = (feature: string) => {
 
             return () => controller.abort()
         },
-        [feature]
+        [feature, request, update]
     )
 
     const open = useCallback(
@@ -86,7 +82,7 @@ export const useFrames = (feature: string) => {
 
             return () => controller.abort()
         },
-        [feature]
+        [feature, request, update]
     )
 
     const close = useCallback(
@@ -109,8 +105,12 @@ export const useFrames = (feature: string) => {
 
             return () => controller.abort()
         },
-        [feature]
+        [feature, request, update]
     )
+
+    useEffect(() => {
+        update()
+    }, [update])
 
     return { ids, actives, toggle, open, close }
 }
