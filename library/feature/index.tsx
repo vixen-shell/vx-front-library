@@ -103,8 +103,20 @@ export class Feature {
 
         Data() {
             return $<{
-                get: (name: string, args?: any[]) => any
-                stream: (name: string, args?: any[]) => any
+                get: (
+                    key: string,
+                    handler?: {
+                        name: string
+                        args?: any[]
+                    }
+                ) => any
+                stream: (
+                    key: string,
+                    handler?: {
+                        name: string
+                        args?: any[]
+                    }
+                ) => any
                 setInterval: (value: number) => void
             }>('Data', useData())
         },

@@ -1,13 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { ApiRoutes } from '../ApiRoutes'
 import { useStream } from './Stream'
 
 interface HandlerInfo {
-    name: string
-    args?: any[]
+    data_name: string
+    handler_name: string
+    handler_args?: any[]
 }
 
-async function fetchData(handlers: HandlerInfo[], signal: AbortSignal) {
+async function fetchData(handler: HandlerInfo, signal: AbortSignal) {
     const urlParams = new URLSearchParams(window.location.search)
     const featureName = urlParams.get('feature')
     const frameId = urlParams.get('frame')
@@ -18,7 +19,7 @@ async function fetchData(handlers: HandlerInfo[], signal: AbortSignal) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(handlers),
+            body: JSON.stringify(handler),
             signal: signal,
         })
 
@@ -34,55 +35,40 @@ async function fetchData(handlers: HandlerInfo[], signal: AbortSignal) {
 export const useData = () => {
     const { stream, setInterval } = useStream()
     const [data, setData] = useState<Record<string, any>>({})
-    const handlers = useRef<Record<string, HandlerInfo>>({})
-    const abortControllerRef = useRef<AbortController | null>(null)
 
-    useEffect(() => {
-        handlers.current = {}
-        abortControllerRef.current = null
-    }, [])
-
-    const update = useCallback(() => {
-        if (abortControllerRef.current) {
-            abortControllerRef.current.abort()
-        }
-
+    const updateData = useCallback((handler: HandlerInfo) => {
         const controller = new AbortController()
-        abortControllerRef.current = controller
         const { signal } = controller
 
         ;(async () => {
             try {
-                setData(
-                    await fetchData(Object.values(handlers.current), signal)
-                )
+                const newData = await fetchData(handler, signal)
+                setData((prevData) => ({ ...prevData, ...newData }))
             } catch (error: any) {
-                if (Object.keys(data).length !== 0) setData({})
-                if (Object.keys(handlers.current).length !== 0)
-                    handlers.current = {}
-                if (error.name !== 'AbortError') console.error(error)
+                console.error(error)
             }
         })()
-
-        return () => controller.abort()
-    }, [data])
+    }, [])
 
     const get = useCallback(
-        (name: string, args?: any[]) => {
-            if (!(name in handlers.current)) {
-                handlers.current[name] = { name: name, args: args }
+        (key: string, handler?: { name: string; args?: any[] }) => {
+            if (!(key in data)) {
+                if (handler) {
+                    setData((prevData) => ({ ...prevData, [key]: undefined }))
 
-                if (
-                    Object.keys(data).length <
-                    Object.keys(handlers.current).length
-                ) {
-                    update()
+                    const handlerInfo: HandlerInfo = {
+                        data_name: key,
+                        handler_name: handler.name,
+                        handler_args: handler.args,
+                    }
+
+                    updateData(handlerInfo)
                 }
             }
 
-            return data[name]
+            return data[key] || undefined
         },
-        [data, update]
+        [data, updateData]
     )
 
     return { get, stream, setInterval }

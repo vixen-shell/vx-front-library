@@ -2,6 +2,12 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { ApiRoutes } from '../ApiRoutes'
 import { SocketEventHandler, SocketEventData } from '../SocketEventHandler'
 
+interface HandlerInfo {
+    data_name: string
+    handler_name: string
+    handler_args?: any[]
+}
+
 function getSocketEventHandler() {
     const urlParams = new URLSearchParams(window.location.search)
     const featureName = urlParams.get('feature')
@@ -21,13 +27,25 @@ export const useStream = () => {
     const socket = useRef<SocketEventHandler>(getSocketEventHandler())
 
     const stream = useCallback(
-        (name: string, args?: any[]) => {
-            socket.current.send_event({
-                id: 'ADD_HANDLER',
-                data: { name: name, args: args },
-            })
+        (key: string, handler?: { name: string; args?: any[] }) => {
+            if (!(key in data)) {
+                if (handler) {
+                    setData((prevData) => ({ ...prevData, [key]: undefined }))
 
-            return data[name]
+                    const handlerInfo: HandlerInfo = {
+                        data_name: key,
+                        handler_name: handler.name,
+                        handler_args: handler.args,
+                    }
+
+                    socket.current.send_event({
+                        id: 'ADD_HANDLER',
+                        data: handlerInfo,
+                    })
+                }
+            }
+
+            return data[key] || undefined
         },
         [data]
     )

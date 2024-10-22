@@ -52,7 +52,9 @@ const Main = () => {
                     roundCaps
                     sections={[
                         {
-                            value: data.stream('cpu_usage'),
+                            value: data.stream('cpu_usage', {
+                                name: 'cpu_usage',
+                            }),
                             color:
                                 data.stream('cpu_usage') < 50
                                     ? theme.primaryColor
@@ -66,7 +68,9 @@ const Main = () => {
                     roundCaps
                     sections={[
                         {
-                            value: data.stream('ram_usage'),
+                            value: data.stream('ram_usage', {
+                                name: 'ram_usage',
+                            }),
                             color:
                                 data.stream('ram_usage') < 50
                                     ? theme.primaryColor
@@ -75,8 +79,10 @@ const Main = () => {
                     ]}
                 />
             </div>
-            <p>{data.get('hello', ['Noha'])}</p>
-            <p>{data.get('good_bye')}</p>
+            <p>{data.get('hello_a', { name: 'hello' })}</p>
+            <p>{data.get('hello_b', { name: 'hello', args: ['Noha'] })}</p>
+            <p>{data.get('good_bye', { name: 'good_bye' })}</p>
+            <p>{data.get('hello_b')}</p>
             <p>autostart: {JSON.stringify(params.get('autostart'))}</p>
             <p>frames.main.name: {params.get('frames.main.name')}</p>
             <p>frames.main.route: {params.get('frames.main.route')}</p>
