@@ -138,10 +138,10 @@ const Main = () => {
                 <Button
                     variant="light"
                     onClick={() => {
-                        if (state.getItem('vx_ui_icons') === 'regular') {
-                            state.setItem('vx_ui_icons', 'thin')
+                        if (state.get('vx_ui_icons') === 'regular') {
+                            state.set('vx_ui_icons', 'thin')
                         } else {
-                            state.setItem('vx_ui_icons', 'regular')
+                            state.set('vx_ui_icons', 'regular')
                         }
                     }}
                 >
@@ -150,10 +150,10 @@ const Main = () => {
                 <Button
                     variant="light"
                     onClick={() => {
-                        if (state.getItem('vx_ui_scale') === '1.0') {
-                            state.setItem('vx_ui_scale', '0.85')
+                        if (state.get('vx_ui_scale') === '1.0') {
+                            state.set('vx_ui_scale', '0.85')
                         } else {
-                            state.setItem('vx_ui_scale', '1.0')
+                            state.set('vx_ui_scale', '1.0')
                         }
                     }}
                 >
@@ -162,10 +162,10 @@ const Main = () => {
                 <Button
                     variant="light"
                     onClick={() => {
-                        if (state.getItem('vx_ui_color') === 'teal') {
-                            state.setItem('vx_ui_color', 'orange')
+                        if (state.get('vx_ui_color') === 'teal') {
+                            state.set('vx_ui_color', 'orange')
                         } else {
-                            state.setItem('vx_ui_color', 'teal')
+                            state.set('vx_ui_color', 'teal')
                         }
                     }}
                 >

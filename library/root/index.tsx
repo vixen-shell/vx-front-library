@@ -1,33 +1,13 @@
 import '@mantine/core/styles.css'
 import ReactDOM from 'react-dom/client'
 import { ErrorFrame } from '../components/ErrorFrame'
-import { GlobalStateType } from '../state'
-import { Api } from '../api'
+import { BaseApi } from '../api'
 
 type ImportCallback = (featureName: string | null) => Promise<any>
 
-type FeatureCallback = (
-    featureName: string,
-    gtkFonts: {
-        font_family: string
-        font_family_monospace: string
-    },
-    initialRoute: string,
-    initialState: GlobalStateType
-) => JSX.Element
-
-function getUrlParams() {
-    const urlParams = new URLSearchParams(window.location.search)
-
-    return {
-        featureName: urlParams.get('feature'),
-        initialRoute: urlParams.get('route'),
-    }
-}
+type FeatureCallback = () => JSX.Element
 
 export function create(container: HTMLElement) {
-    const urlParams = getUrlParams()
-
     const ErrorFeature = (message: string) => {
         return <ErrorFrame message={message} />
     }
@@ -35,23 +15,20 @@ export function create(container: HTMLElement) {
     async function getFeature(
         importCallback: ImportCallback
     ): Promise<FeatureCallback> {
-        const featureName = urlParams.featureName
-
-        if (!featureName) {
-            throw new Error("Missing 'feature' parameter")
-        }
-
         try {
-            const feature = (await importCallback(featureName)).default
+            const feature = (await importCallback(BaseApi.urlParams.feature))
+                .default
             if (!feature)
                 throw new Error(
-                    `Bad initialization of feature '${urlParams.featureName}'`
+                    `Bad initialization of feature '${BaseApi.urlParams.feature}'`
                 )
             return feature as FeatureCallback
         } catch (error: any) {
             const errorMessage: string = error.message
             if (errorMessage.startsWith('Unknown variable dynamic import')) {
-                throw new Error(`Feature '${urlParams.featureName}' not found`)
+                throw new Error(
+                    `Feature '${BaseApi.urlParams.feature}' not found`
+                )
             }
             throw new Error(error.message)
         }
@@ -64,20 +41,8 @@ export function create(container: HTMLElement) {
     }
 
     async function initFeature(feature: FeatureCallback) {
-        await Api.init(urlParams.featureName!)
-        const gtkFonts = await Api.getGtkFonts()
-        const initialState = await Api.getInitialState()
-
-        // document.documentElement.style.zoom = String(initialState.vx_ui_scale)
-
-        insertFeature(
-            feature(
-                urlParams.featureName!,
-                gtkFonts,
-                urlParams.initialRoute!,
-                initialState
-            )
-        )
+        await BaseApi.init()
+        insertFeature(feature())
     }
 
     async function render(importCallback: ImportCallback) {

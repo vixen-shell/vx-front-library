@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useReducer } from 'react'
 import type { SocketEventData } from '../api'
-import { Api } from '../api'
+import { BaseApi } from '../api'
 
 export type GlobalStateType = SocketEventData
 
@@ -68,10 +68,18 @@ export const GlobalStateProvider: React.FC<{
                 payload: data.value,
             })
         }
-        Api.stateEvents.addEventListener('UPDATE', onUpdateStateEvent)
+        BaseApi.state.eventHandler.addEventListener(
+            'UPDATE',
+            onUpdateStateEvent
+        )
+        BaseApi.state.eventHandler.connect()
 
         return () => {
-            Api.stateEvents.removeEventListener('UPDATE', onUpdateStateEvent)
+            BaseApi.state.eventHandler.removeEventListener(
+                'UPDATE',
+                onUpdateStateEvent
+            )
+            BaseApi.state.eventHandler.disconnect()
         }
     }, [])
 

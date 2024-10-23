@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
+import { BaseApi } from '../api'
 import { ApiRoutes } from '../ApiRoutes'
 
-export const useFrames = (feature: string) => {
+export const useFrames = (feature: string = BaseApi.urlParams.feature) => {
     const [ids, setIds] = useState<string[]>([])
     const [actives, setActives] = useState<string[]>([])
 

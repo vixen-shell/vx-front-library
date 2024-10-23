@@ -2,15 +2,21 @@ import { useRef, useEffect } from 'react'
 import { ApiRoutes } from '../ApiRoutes'
 import { SocketEventHandler, SocketEventData } from '../SocketEventHandler'
 
-export const useSocket = (
-    feature: string,
-    target: string,
-    name: string,
-    auto: boolean
-) => {
-    const socket = useRef<SocketEventHandler>(
-        new SocketEventHandler(ApiRoutes.feature_socket(feature, target, name))
-    )
+function getSocketEventHandler(socketName: string) {
+    const urlParams = new URLSearchParams(window.location.search)
+    const featureName = urlParams.get('feature')
+
+    if (featureName) {
+        return new SocketEventHandler(
+            ApiRoutes.feature_socket(featureName, featureName, socketName)
+        )
+    } else {
+        throw new Error('Unable to get feature url parameter')
+    }
+}
+
+export const useSocket = (name: string) => {
+    const socket = useRef<SocketEventHandler>(getSocketEventHandler(name))
 
     useEffect(() => {
         const currentSocket = socket.current
@@ -20,13 +26,13 @@ export const useSocket = (
         }
 
         currentSocket.addEventListener('ERROR', onError)
-        if (auto) currentSocket.connect()
+        currentSocket.connect()
 
         return () => {
             currentSocket.removeEventListener('ERROR', onError)
-            if (auto) currentSocket.disconnect()
+            currentSocket.disconnect()
         }
-    }, [auto])
+    }, [])
 
     return socket.current as SocketEventHandler
 }

@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
+import { BaseApi } from '../api'
 import { ApiRoutes } from '../ApiRoutes'
 
-export const useParams = (feature: string, paths: string[]) => {
+export const useParams = (
+    paths: string[],
+    feature: string = BaseApi.urlParams.feature
+) => {
     const [params, setParams] = useState<Record<string, any>>({})
 
     const updateParams = useCallback((paramPath: string, value: any) => {

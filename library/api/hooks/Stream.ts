@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { BaseApi } from '../api'
 import { ApiRoutes } from '../ApiRoutes'
 import { SocketEventHandler, SocketEventData } from '../SocketEventHandler'
 
@@ -8,23 +9,14 @@ interface HandlerInfo {
     handler_args?: any[]
 }
 
-function getSocketEventHandler() {
-    const urlParams = new URLSearchParams(window.location.search)
-    const featureName = urlParams.get('feature')
-
-    if (featureName) {
-        return new SocketEventHandler(
-            ApiRoutes.feature_data_streamer(featureName)
-        )
-    } else {
-        throw new Error('Unable to get feature url parameter')
-    }
-}
-
 export const useStream = () => {
     const [data, setData] = useState<Record<string, any>>({})
 
-    const socket = useRef<SocketEventHandler>(getSocketEventHandler())
+    const socket = useRef<SocketEventHandler>(
+        new SocketEventHandler(
+            ApiRoutes.feature_data_streamer(BaseApi.urlParams.feature)
+        )
+    )
 
     const stream = useCallback(
         (key: string, handler?: { name: string; args?: any[] }) => {

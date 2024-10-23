@@ -14,6 +14,7 @@ export {
     useSystray,
     useMenu,
     useDbusMenu,
+    useVxState,
 } from './hooks'
 
-export { Api } from './api'
+export { BaseApi } from './api'

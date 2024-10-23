@@ -1,18 +1,17 @@
 import type { RouteItems } from '../router'
-import type { GlobalStateType } from '../state'
 
 import { Routes, useRouter, Link } from '../router'
-import { GlobalState, useGlobalState } from '../state'
+import { GlobalState } from '../state'
 
 import {
-    Api,
+    BaseApi,
     useTask,
     useData,
     useSocket,
     useFrames,
     useParams,
     useMenu,
-    SocketEventHandler,
+    useVxState,
 } from '../api'
 
 import FeatureRender from './FeatureRender'
@@ -35,32 +34,18 @@ export class Feature {
 
         Routes.define(routes)
 
-        const feature = (
-            featureName: string,
-            gtkFonts: {
-                font_family: string
-                font_family_monospace: string
-            },
-            initialRoute: string,
-            initialState: GlobalStateType
-        ) => {
+        const feature = () => {
             Feature.isInit = true
-            Feature.featureName = featureName
-            GlobalState.initialState = initialState
+            GlobalState.initialState = BaseApi.state.initial
 
-            return (
-                <FeatureRender
-                    gtkFonts={gtkFonts}
-                    initialRoute={initialRoute}
-                />
-            )
+            return <FeatureRender initialRoute={BaseApi.urlParams.route} />
         }
 
         return feature
     }
 
     static get names() {
-        return $<string[] | undefined>('feature names', Api.featureNames)
+        return $<string[]>('feature names', BaseApi.features)
     }
 
     static get Link() {
@@ -73,68 +58,31 @@ export class Feature {
         },
 
         get State() {
-            return $<typeof useGlobalState>('State', useGlobalState)
+            return $<typeof useVxState>('State', useVxState)
         },
 
-        Params(paths: string[]) {
-            return $<{
-                get: (path: string) => any
-                set: (path: string, value: any) => () => void
-                save: () => () => void
-            }>('Params', useParams(Feature.featureName!, paths))
+        get Params() {
+            return $<typeof useParams>('Params', useParams)
         },
 
-        Frames(feature: string = Feature.featureName!) {
-            return $<{
-                ids: string[]
-                actives: string[]
-                toggle: (frameId: string) => () => void
-                open: (frameId: string) => () => void
-                close: (frameId: string) => () => void
-            }>('Frames', useFrames(feature))
+        get Frames() {
+            return $<typeof useFrames>('Frames', useFrames)
         },
 
-        Task() {
-            return $<{
-                run: (name: string, args?: any[]) => () => void
-                afterRun: (callback: (data: any, error: any) => void) => void
-            }>('Task', useTask())
+        get Task() {
+            return $<typeof useTask>('Task', useTask)
         },
 
-        Data() {
-            return $<{
-                get: (
-                    key: string,
-                    handler?: {
-                        name: string
-                        args?: any[]
-                    }
-                ) => any
-                stream: (
-                    key: string,
-                    handler?: {
-                        name: string
-                        args?: any[]
-                    }
-                ) => any
-                setInterval: (value: number) => void
-            }>('Data', useData())
+        get Data() {
+            return $<typeof useData>('Data', useData)
         },
 
-        Menu() {
-            return $<{ popup: (name: string) => () => void }>('Menu', useMenu())
+        get Menu() {
+            return $<typeof useMenu>('Menu', useMenu)
         },
 
-        Socket(name: string, auto: boolean = true) {
-            return $<SocketEventHandler>(
-                'Socket',
-                useSocket(
-                    Feature.featureName!,
-                    Feature.featureName!,
-                    name,
-                    auto
-                )
-            )
+        get Socket() {
+            return $<typeof useSocket>('Socket', useSocket)
         },
     }
 }

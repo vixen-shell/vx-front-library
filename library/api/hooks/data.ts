@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { BaseApi } from '../api'
 import { ApiRoutes } from '../ApiRoutes'
 import { useStream } from './Stream'
 
@@ -9,27 +10,24 @@ interface HandlerInfo {
 }
 
 async function fetchData(handler: HandlerInfo, signal: AbortSignal) {
-    const urlParams = new URLSearchParams(window.location.search)
-    const featureName = urlParams.get('feature')
-    const frameId = urlParams.get('frame')
-
-    if (featureName && frameId) {
-        const response = await fetch(ApiRoutes.feature_data(featureName), {
+    const response = await fetch(
+        ApiRoutes.feature_data(BaseApi.urlParams.feature),
+        {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(handler),
             signal: signal,
-        })
-
-        if (!response.ok) {
-            const errorResponse = await response.json()
-            throw new Error(errorResponse.message)
         }
+    )
 
-        return await response.json()
+    if (!response.ok) {
+        const errorResponse = await response.json()
+        throw new Error(errorResponse.message)
     }
+
+    return await response.json()
 }
 
 export const useData = () => {

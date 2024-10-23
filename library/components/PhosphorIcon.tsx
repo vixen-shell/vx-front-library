@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { ApiRoutes } from '../api/ApiRoutes'
 import { ImageBroken } from './ImageBroken'
-import { useGlobalState } from '../state'
+import { useVxState } from '../api'
 
 interface PhosphorIconProps
     extends Omit<React.HTMLAttributes<HTMLDivElement>, 'style'> {
@@ -77,19 +77,19 @@ export const PhosphorIcon: React.FC<PhosphorIconProps> = ({
     color = undefined,
     ...props
 }) => {
-    const { getItem } = useGlobalState()
+    const state = useVxState()
     const [fetchError, setFetchError] = useState<boolean>(false)
     const [iconBlob, setIconBlob] = useState<Blob | null>(null)
     const [iStyle, setIStyle] = useState<
         'bold' | 'duotone' | 'fill' | 'light' | 'regular' | 'thin' | undefined
-    >(getItem('vx_ui_icons'))
+    >(state.get('vx_ui_icons'))
     const iconContainer = useRef<HTMLDivElement>(document.createElement('div'))
 
     useEffect(() => {
         if (!iconStyle) {
-            setIStyle(getItem('vx_ui_icons'))
+            setIStyle(state.get('vx_ui_icons'))
         }
-    }, [getItem, iconStyle])
+    }, [iconStyle, state])
 
     useEffect(() => {
         ;(async () => {

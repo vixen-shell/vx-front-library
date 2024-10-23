@@ -1,9 +1,13 @@
 import { ApiRoutes } from './ApiRoutes'
-import { SocketEventHandler } from './SocketEventHandler'
-import { GlobalStateType } from '../state'
+import { SocketEventHandler, SocketEventData } from './SocketEventHandler'
+
+interface DefaultFonts {
+    font_family: string
+    font_family_monospace: string
+}
 
 async function request(route: string, force: boolean = false) {
-    if (!force && !Api.isInit) throw new Error('Api not initialized')
+    if (!force && !BaseApi.isInit) throw new Error('Api not initialized')
 
     const response = await fetch(route)
 
@@ -15,28 +19,42 @@ async function request(route: string, force: boolean = false) {
     return await response.json()
 }
 
-export class Api {
-    static featureNames: string[] | undefined = undefined
-    static currentFeatureName: string | undefined = undefined
-    private static _stateEvents: SocketEventHandler | undefined = undefined
+function getUrlParams() {
+    const urlParams = new URLSearchParams(window.location.search)
+    const feature = urlParams.get('feature')
+    const frame = urlParams.get('frame')
+    const route = urlParams.get('route')
+
+    if (!feature) throw new Error("Unable to find url parameter 'feature'")
+    if (!frame) throw new Error("Unable to find url parameter 'frame'")
+    if (!route) throw new Error("Unable to find url parameter 'route'")
+
+    return { feature, frame, route }
+}
+
+export class BaseApi {
     private static _isInit: boolean = false
+    private static _features: string[] | undefined = undefined
+    private static _initialState: SocketEventData | undefined = undefined
+    private static _stateEventHandler: SocketEventHandler | undefined =
+        undefined
+    private static _defaultFonts: DefaultFonts | undefined = undefined
 
-    static async init(featureName: string) {
-        if (!(await Api.ping())) throw new Error('Unable to acces Vixen Api.')
+    static async init() {
+        if (!(await BaseApi.ping())) {
+            throw new Error('Unable to acces Vixen Api')
+        }
 
-        Api.featureNames = (await request(ApiRoutes.features_names, true))
+        BaseApi._features = (await request(ApiRoutes.features_names, true))
             .names as string[]
 
-        Api.currentFeatureName = featureName
+        BaseApi._initialState = await request(ApiRoutes.vx_state, true)
+        BaseApi._stateEventHandler = new SocketEventHandler(
+            ApiRoutes.vx_state_socket
+        )
+        BaseApi._defaultFonts = await request(ApiRoutes.gtk_fonts, true)
 
-        Api._stateEvents = new SocketEventHandler(ApiRoutes.vx_state_socket)
-        Api._stateEvents.connect()
-
-        Api._isInit = true
-    }
-
-    static get isInit() {
-        return Api._isInit
+        BaseApi._isInit = true
     }
 
     static async ping(): Promise<boolean> {
@@ -48,21 +66,35 @@ export class Api {
         }
     }
 
-    static get stateEvents() {
-        if (Api._stateEvents) return Api._stateEvents
-        throw new Error('Api not initialized')
+    static get isInit() {
+        return BaseApi._isInit
     }
 
-    static async getInitialState(): Promise<GlobalStateType> {
-        const initialState = await request(ApiRoutes.vx_state)
-
-        return initialState as GlobalStateType
+    static get features() {
+        if (!BaseApi._isInit) {
+            throw new Error('Api not initialized')
+        }
+        return BaseApi._features!
     }
 
-    static async getGtkFonts(): Promise<{
-        font_family: string
-        font_family_monospace: string
-    }> {
-        return await request(ApiRoutes.gtk_fonts)
+    static get urlParams() {
+        return getUrlParams()
+    }
+
+    static get state() {
+        if (!BaseApi._isInit) {
+            throw new Error('Api not initialized')
+        }
+        return {
+            initial: BaseApi._initialState!,
+            eventHandler: BaseApi._stateEventHandler!,
+        }
+    }
+
+    static get defaultFonts() {
+        if (!BaseApi._isInit) {
+            throw new Error('Api not initialized')
+        }
+        return BaseApi._defaultFonts!
     }
 }
