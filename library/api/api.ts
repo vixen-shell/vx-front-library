@@ -19,19 +19,6 @@ async function request(route: string, force: boolean = false) {
     return await response.json()
 }
 
-function getUrlParams() {
-    const urlParams = new URLSearchParams(window.location.search)
-    const feature = urlParams.get('feature')
-    const frame = urlParams.get('frame')
-    const route = urlParams.get('route')
-
-    if (!feature) throw new Error("Unable to find url parameter 'feature'")
-    if (!frame) throw new Error("Unable to find url parameter 'frame'")
-    if (!route) throw new Error("Unable to find url parameter 'route'")
-
-    return { feature, frame, route }
-}
-
 export class BaseApi {
     private static _isInit: boolean = false
     private static _features: string[] | undefined = undefined
@@ -50,7 +37,7 @@ export class BaseApi {
 
         BaseApi._initialState = await request(ApiRoutes.vx_state, true)
         BaseApi._stateEventHandler = new SocketEventHandler(
-            ApiRoutes.vx_state_socket
+            ApiRoutes.feature_state_socket(BaseApi.urlParams.feature)
         )
         BaseApi._defaultFonts = await request(ApiRoutes.gtk_fonts, true)
 
@@ -78,7 +65,16 @@ export class BaseApi {
     }
 
     static get urlParams() {
-        return getUrlParams()
+        const urlParams = new URLSearchParams(window.location.search)
+        const feature = urlParams.get('feature')
+        const frame = urlParams.get('frame')
+        const route = urlParams.get('route')
+
+        if (!feature) throw new Error("Unable to find url parameter 'feature'")
+        if (!frame) throw new Error("Unable to find url parameter 'frame'")
+        if (!route) throw new Error("Unable to find url parameter 'route'")
+
+        return { feature, frame, route }
     }
 
     static get state() {

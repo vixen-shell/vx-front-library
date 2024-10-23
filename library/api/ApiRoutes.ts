@@ -34,10 +34,6 @@ export class ApiRoutes {
         return uri('http', `/image_file/?filepath=${filePath}`)
     }
 
-    // WEBSOCKETS :: STATE
-    static readonly vx_state_socket = uri('ws', '/vx_state')
-    static readonly vx_systray_socket = uri('ws', '/vx_systray')
-
     // ----------------------------------- - - -
     // ENDPOINTS :: FEATURES
     static readonly features_names = uri('http', '/features/names')
@@ -76,19 +72,17 @@ export class ApiRoutes {
     }
 
     // WEBSOCKETS :: FEATURE CONTENTS
-    static feature_data_streamer(featureName: string) {
+    static feature_state_socket(featureName: string) {
+        return uri('ws', `/feature/${featureName}/state`)
+    }
+    static feature_systray_socket(featureName: string) {
+        return uri('ws', `/feature/${featureName}/systray`)
+    }
+    static feature_data_streamer_socket(featureName: string) {
         return uri('ws', `/feature/${featureName}/data_streamer`)
     }
-
-    static feature_socket(
-        featureName: string,
-        targetFeatureName: string,
-        socketName: string
-    ) {
-        return uri(
-            'ws',
-            `/feature/${featureName}/sockets/${targetFeatureName}/${socketName}`
-        )
+    static feature_socket(featureName: string, socketName: string) {
+        return uri('ws', `/feature/${featureName}/sockets/${socketName}`)
     }
 
     // ----------------------------------- - - -

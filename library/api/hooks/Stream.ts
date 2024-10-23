@@ -14,7 +14,7 @@ export const useStream = () => {
 
     const socket = useRef<SocketEventHandler>(
         new SocketEventHandler(
-            ApiRoutes.feature_data_streamer(BaseApi.urlParams.feature)
+            ApiRoutes.feature_data_streamer_socket(BaseApi.urlParams.feature)
         )
     )
 

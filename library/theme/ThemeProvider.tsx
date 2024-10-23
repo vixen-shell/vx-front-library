@@ -17,11 +17,15 @@ export const ThemeProvider: React.FC<{
     return (
         <MantineProvider
             theme={createTheme({
-                fontFamily: BaseApi.defaultFonts.font_family,
-                fontFamilyMonospace: BaseApi.defaultFonts.font_family_monospace,
+                fontFamily:
+                    state.get('vx_ui_font_family') ||
+                    BaseApi.defaultFonts.font_family,
+                fontFamilyMonospace:
+                    state.get('vx_ui_font_family_monospace') ||
+                    BaseApi.defaultFonts.font_family_monospace,
                 primaryColor: state.get('vx_ui_color'),
             })}
-            defaultColorScheme="auto"
+            defaultColorScheme={state.get('vx_ui_color_scheme') || 'auto'}
         >
             {children}
         </MantineProvider>

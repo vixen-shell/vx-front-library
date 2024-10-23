@@ -150,10 +150,10 @@ const Main = () => {
                 <Button
                     variant="light"
                     onClick={() => {
-                        if (state.get('vx_ui_scale') === '1.0') {
-                            state.set('vx_ui_scale', '0.85')
+                        if (state.get('vx_ui_scale') === 1.0) {
+                            state.set('vx_ui_scale', 0.85)
                         } else {
-                            state.set('vx_ui_scale', '1.0')
+                            state.set('vx_ui_scale', 1.0)
                         }
                     }}
                 >

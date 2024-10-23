@@ -1,22 +1,14 @@
 import { useRef, useEffect } from 'react'
+import { BaseApi } from '../api'
 import { ApiRoutes } from '../ApiRoutes'
 import { SocketEventHandler, SocketEventData } from '../SocketEventHandler'
 
-function getSocketEventHandler(socketName: string) {
-    const urlParams = new URLSearchParams(window.location.search)
-    const featureName = urlParams.get('feature')
-
-    if (featureName) {
-        return new SocketEventHandler(
-            ApiRoutes.feature_socket(featureName, featureName, socketName)
-        )
-    } else {
-        throw new Error('Unable to get feature url parameter')
-    }
-}
-
 export const useSocket = (name: string) => {
-    const socket = useRef<SocketEventHandler>(getSocketEventHandler(name))
+    const socket = useRef<SocketEventHandler>(
+        new SocketEventHandler(
+            ApiRoutes.feature_socket(BaseApi.urlParams.feature, name)
+        )
+    )
 
     useEffect(() => {
         const currentSocket = socket.current

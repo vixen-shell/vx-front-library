@@ -1,10 +1,13 @@
 import { useRef, useEffect, useState } from 'react'
 import { ApiRoutes } from '../ApiRoutes'
+import { BaseApi } from '../api'
 import { SocketEventHandler, SocketEventData } from '../SocketEventHandler'
 
 export const useSystray = () => {
     const socket = useRef<SocketEventHandler>(
-        new SocketEventHandler(ApiRoutes.vx_systray_socket)
+        new SocketEventHandler(
+            ApiRoutes.feature_systray_socket(BaseApi.urlParams.feature)
+        )
     )
 
     const [systray, setSystray] = useState<any[]>([])
