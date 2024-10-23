@@ -2,9 +2,11 @@ import psutil
 from vx_root import root_feature, ContextMenu, root_content
 
 feature = root_feature()
+content = root_content()
 
 feature.init(
     {
+        "title": "Test Bench",
         "frames": {
             "main": {
                 "name": "Vixen",
@@ -14,7 +16,10 @@ feature.init(
     }
 )
 
-content = root_content()
+
+@content.dispatch("data")
+def feature_title():
+    return feature.params.get_value("title")
 
 
 @content.dispatch("menu")

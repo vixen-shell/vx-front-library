@@ -43,10 +43,12 @@ const Main = () => {
                 padding: '16px',
             }}
         >
-            <Title order={2}>Hello !!!</Title>
-            <Text size="sm">This is the Main Feature</Text>
-            <div>
+            <Title order={2}>
+                {data.get('title', { name: 'feature_title' })}
+            </Title>
+            <div style={{ display: 'flex' }}>
                 <RingProgress
+                    title="CPU Usage"
                     size={32}
                     thickness={3}
                     roundCaps
@@ -63,6 +65,7 @@ const Main = () => {
                     ]}
                 />
                 <RingProgress
+                    title="RAM Usage"
                     size={32}
                     thickness={3}
                     roundCaps
@@ -79,13 +82,29 @@ const Main = () => {
                     ]}
                 />
             </div>
-            <p>{data.get('hello_a', { name: 'hello' })}</p>
-            <p>{data.get('hello_b', { name: 'hello', args: ['Noha'] })}</p>
-            <p>{data.get('good_bye', { name: 'good_bye' })}</p>
-            <p>{data.get('hello_b')}</p>
-            <p>autostart: {JSON.stringify(params.get('autostart'))}</p>
-            <p>frames.main.name: {params.get('frames.main.name')}</p>
-            <p>frames.main.route: {params.get('frames.main.route')}</p>
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: '32px',
+                    padding: '32px',
+                    flexWrap: 'wrap',
+                }}
+            >
+                <p>{data.get('hello_a', { name: 'hello' })}</p>
+                <p>{data.get('hello_b', { name: 'hello', args: ['Noha'] })}</p>
+                <p>{data.get('good_bye', { name: 'good_bye' })}</p>
+                <p>{data.get('hello_b')}</p>
+                <p>
+                    <b>autostart</b>: {JSON.stringify(params.get('autostart'))}
+                </p>
+                <p>
+                    <b>frames.main.name</b>: {params.get('frames.main.name')}
+                </p>
+                <p>
+                    <b>frames.main.route</b>: {params.get('frames.main.route')}
+                </p>
+            </div>
             <div style={{ display: 'flex', gap: '12px' }}>
                 <Button
                     variant="light"
