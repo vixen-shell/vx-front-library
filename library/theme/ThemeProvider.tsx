@@ -3,7 +3,8 @@ import './globals.css'
 
 import { createTheme, MantineProvider } from '@mantine/core'
 import { useEffect } from 'react'
-import { BaseApi, useVxState } from '../api'
+import { BaseApi } from '../api'
+import { useVxState } from '../stateHook'
 
 export const ThemeProvider: React.FC<{
     children: React.ReactNode

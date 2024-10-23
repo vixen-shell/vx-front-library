@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { GlobalStateContext } from '../../state'
+import { GlobalStateContext } from '../state'
 import { BaseApi } from '../api'
 
 export const useVxState = () => {

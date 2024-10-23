@@ -2,6 +2,7 @@ import type { RouteItems } from '../router'
 
 import { Routes, useRouter, Link } from '../router'
 import { GlobalState } from '../state'
+import { useVxState } from '../stateHook'
 
 import {
     BaseApi,
@@ -11,7 +12,6 @@ import {
     useFrames,
     useParams,
     useMenu,
-    useVxState,
 } from '../api'
 
 import FeatureRender from './FeatureRender'
