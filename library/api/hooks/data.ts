@@ -3,11 +3,6 @@ import { BaseApi } from '../api'
 import { ApiRoutes } from '../ApiRoutes'
 import { useStream } from './Stream'
 
-interface UseDataProps {
-    UseStream?: boolean
-    interval?: number
-}
-
 interface HandlerInfo {
     data_name: string
     handler_name: string
@@ -35,7 +30,12 @@ async function fetchData(handler: HandlerInfo, signal: AbortSignal) {
     return await response.json()
 }
 
-export const useData = (options: UseDataProps = { UseStream: false }) => {
+export const useData = (
+    options: {
+        UseStream?: boolean
+        interval?: number
+    } = { UseStream: false }
+) => {
     const { stream } = useStream(options.UseStream, options.interval)
     const [data, setData] = useState<Record<string, any>>({})
 
