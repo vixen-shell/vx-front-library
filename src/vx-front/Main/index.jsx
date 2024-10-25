@@ -18,7 +18,7 @@ const Main = () => {
     ])
     const task = Feature.Use.Task()
     const frames = Feature.Use.Frames()
-    const data = Feature.Use.Data()
+    const data = Feature.Use.Data({ UseStream: true, interval: 2.5 })
     const state = Feature.Use.State()
     const menu = Feature.Use.Menu()
     const theme = useMantineTheme()
@@ -58,9 +58,11 @@ const Main = () => {
                                 name: 'cpu_usage',
                             }),
                             color:
-                                data.stream('cpu_usage') < 50
-                                    ? theme.primaryColor
-                                    : 'orange',
+                                data.stream('cpu_usage') > 75
+                                    ? 'red'
+                                    : data.stream('cpu_usage') > 50
+                                    ? 'orange'
+                                    : theme.primaryColor,
                         },
                     ]}
                 />
@@ -75,9 +77,11 @@ const Main = () => {
                                 name: 'ram_usage',
                             }),
                             color:
-                                data.stream('ram_usage') < 50
-                                    ? theme.primaryColor
-                                    : 'orange',
+                                data.stream('ram_usage') > 75
+                                    ? 'red'
+                                    : data.stream('ram_usage') > 50
+                                    ? 'orange'
+                                    : theme.primaryColor,
                         },
                     ]}
                 />

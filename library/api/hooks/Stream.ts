@@ -9,7 +9,7 @@ interface HandlerInfo {
     handler_args?: any[]
 }
 
-export const useStream = () => {
+export const useStream = (connect: boolean = false, interval?: number) => {
     const [data, setData] = useState<Record<string, any>>({})
 
     const socket = useRef<SocketEventHandler>(
@@ -37,17 +37,10 @@ export const useStream = () => {
                 }
             }
 
-            return data[key] || undefined
+            return data[key]
         },
         [data]
     )
-
-    const setInterval = useCallback((value: number) => {
-        socket.current.send_event({
-            id: 'SET_INTERVAL',
-            data: { interval: value },
-        })
-    }, [])
 
     useEffect(() => {
         const currentSocket = socket.current
@@ -63,14 +56,24 @@ export const useStream = () => {
 
         currentSocket.addEventListener('UPDATE', onUpdate)
         currentSocket.addEventListener('ERROR', onError)
-        currentSocket.connect()
+
+        if (connect) {
+            currentSocket.connect()
+
+            if (interval) {
+                currentSocket.send_event({
+                    id: 'SET_INTERVAL',
+                    data: { interval: interval },
+                })
+            }
+        }
 
         return () => {
             currentSocket.removeEventListener('UPDATE', onUpdate)
             currentSocket.removeEventListener('ERROR', onError)
-            currentSocket.disconnect()
+            if (connect) currentSocket.disconnect()
         }
-    }, [])
+    }, [connect, interval])
 
-    return { stream, setInterval }
+    return { stream }
 }
