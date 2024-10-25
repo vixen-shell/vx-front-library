@@ -25,7 +25,6 @@ function $<T>(name: string, reference: T) {
 
 export class Feature {
     static isInit: boolean = false
-    static featureName: string | undefined = undefined
 
     static init(routes: RouteItems) {
         if (Feature.isInit) {
@@ -45,7 +44,11 @@ export class Feature {
     }
 
     static get names() {
-        return $<string[]>('feature names', BaseApi.features)
+        return $<typeof BaseApi.features>('feature names', BaseApi.features)
+    }
+
+    static get current() {
+        return $<typeof BaseApi.urlParams>('feature names', BaseApi.urlParams)
     }
 
     static get Link() {
