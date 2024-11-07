@@ -8,15 +8,6 @@ interface PopupInfos {
     monitor_id: number
 }
 
-interface ShowProps {
-    route: string
-    monitorId?: number
-    position?: { x: number; y: number }
-    size?: { width: number; height: number }
-    resizable?: boolean
-    exitOnMouseLeave?: boolean
-}
-
 async function showPopup(popupInfos: PopupInfos) {
     const response = await fetch(
         ApiRoutes.popup_frame_show(BaseApi.urlParams.feature),
@@ -71,7 +62,14 @@ export const usePopupFrame = () => {
         size = undefined,
         resizable = false,
         exitOnMouseLeave = false,
-    }: ShowProps) => {
+    }: {
+        route: string
+        monitorId?: number
+        position?: { x: number; y: number }
+        size?: { width: number; height: number }
+        resizable?: boolean
+        exitOnMouseLeave?: boolean
+    }) => {
         if (!state.get.vx_popup_frame) {
             state.set('vx_popup_frame', {
                 position: position || null,

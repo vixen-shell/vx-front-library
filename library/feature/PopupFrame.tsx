@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { usePopupFrame } from '../api'
+import { usePopupFrame } from '../api/hooks/popup'
 import { useVxState } from '../stateHook'
 import { Paper } from '@mantine/core'
 import { Resizable } from 're-resizable'
