@@ -1,5 +1,4 @@
 import '@mantine/core/styles.css'
-import './globals.css'
 
 import { createTheme, MantineProvider } from '@mantine/core'
 import { useEffect } from 'react'
@@ -12,21 +11,21 @@ export const ThemeProvider: React.FC<{
     const state = useVxState()
 
     useEffect(() => {
-        document.documentElement.style.zoom = String(state.get('vx_ui_scale'))
-    }, [state])
+        document.documentElement.style.zoom = String(state.get.vx_ui_scale)
+    }, [state.get.vx_ui_scale])
 
     return (
         <MantineProvider
             theme={createTheme({
                 fontFamily:
-                    state.get('vx_ui_font_family') ||
+                    state.get.vx_ui_font_family ||
                     BaseApi.defaultFonts.font_family,
                 fontFamilyMonospace:
-                    state.get('vx_ui_font_family_monospace') ||
+                    state.get.vx_ui_font_family_monospace ||
                     BaseApi.defaultFonts.font_family_monospace,
-                primaryColor: state.get('vx_ui_color'),
+                primaryColor: state.get.vx_ui_color,
             })}
-            defaultColorScheme={state.get('vx_ui_color_scheme') || 'auto'}
+            defaultColorScheme={state.get.vx_ui_color_scheme || 'auto'}
         >
             {children}
         </MantineProvider>

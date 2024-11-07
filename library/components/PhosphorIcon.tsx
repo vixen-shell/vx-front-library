@@ -82,14 +82,14 @@ export const PhosphorIcon: React.FC<PhosphorIconProps> = ({
     const [iconBlob, setIconBlob] = useState<Blob | null>(null)
     const [iStyle, setIStyle] = useState<
         'bold' | 'duotone' | 'fill' | 'light' | 'regular' | 'thin' | undefined
-    >(state.get('vx_ui_icons'))
+    >(state.get.vx_ui_icons)
     const iconContainer = useRef<HTMLDivElement>(document.createElement('div'))
 
     useEffect(() => {
         if (!iconStyle) {
-            setIStyle(state.get('vx_ui_icons'))
+            setIStyle(state.get.vx_ui_icons)
         }
-    }, [iconStyle, state])
+    }, [iconStyle, state.get.vx_ui_icons])
 
     useEffect(() => {
         ;(async () => {

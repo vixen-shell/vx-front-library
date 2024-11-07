@@ -12,6 +12,7 @@ import {
     useFrames,
     useParams,
     useMenu,
+    usePopupFrame,
 } from '../api'
 
 import FeatureRender from './FeatureRender'
@@ -82,6 +83,10 @@ export class Feature {
 
         get Menu() {
             return $<typeof useMenu>('Menu', useMenu)
+        },
+
+        get PopupFrame() {
+            return $<typeof usePopupFrame>('PopupFrame', usePopupFrame)
         },
 
         get Socket() {

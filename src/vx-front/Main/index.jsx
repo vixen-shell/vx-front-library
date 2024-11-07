@@ -1,16 +1,17 @@
 import '@mantine/core/styles.css'
 import {
-    Text,
     Title,
+    Text,
     Button,
     RingProgress,
     useMantineTheme,
 } from '@mantine/core'
 
 import { Feature, Icon, SysIcon, ImageFile, SysTray } from '../../__lib'
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const Main = () => {
+    const popup = Feature.Use.PopupFrame()
     const params = Feature.Use.Params([
         'autostart',
         'frames.main.name',
@@ -23,7 +24,15 @@ const Main = () => {
     const menu = Feature.Use.Menu()
     const theme = useMantineTheme()
 
+    const popupSize = useRef({
+        width: 400,
+        height: 400,
+    })
+
     useEffect(() => {
+        popup.onHiding((position, size) => {
+            popupSize.current = size
+        })
         task.afterRun((data, error) => {
             if (data) console.log(data)
             if (error) console.error(error)
@@ -35,7 +44,7 @@ const Main = () => {
             style={{
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'center',
+                justifyContent: 'flex-start',
                 alignItems: 'center',
                 gap: '16px',
                 height: '100%',
@@ -95,7 +104,7 @@ const Main = () => {
                     flexWrap: 'wrap',
                 }}
             >
-                <p>{data.get('hello_a', { name: 'hello' })}</p>
+                <Text>{data.get('hello_a', { name: 'hello' })}</Text>
                 <p>{data.get('hello_b', { name: 'hello', args: ['Noha'] })}</p>
                 <p>{data.get('good_bye', { name: 'good_bye' })}</p>
                 <p>{data.get('hello_b')}</p>
@@ -108,6 +117,25 @@ const Main = () => {
                 <p>
                     <b>frames.main.route</b>: {params.get('frames.main.route')}
                 </p>
+            </div>
+            <div style={{ display: 'flex', gap: '12px' }}>
+                <Button
+                    variant="light"
+                    onClick={() =>
+                        popup.show({
+                            route: 'main',
+                            monitorId: 1,
+                            position: { x: 100, y: 1200 },
+                            size: popupSize.current,
+                            resizable: true,
+                        })
+                    }
+                >
+                    Show Popup Frame
+                </Button>
+                <Button variant="light" onClick={() => popup.hide()}>
+                    Hide Popup Frame
+                </Button>
             </div>
             <div style={{ display: 'flex', gap: '12px' }}>
                 <Button
@@ -161,7 +189,7 @@ const Main = () => {
                 <Button
                     variant="light"
                     onClick={() => {
-                        if (state.get('vx_ui_icons') === 'regular') {
+                        if (state.get.vx_ui_icons === 'regular') {
                             state.set('vx_ui_icons', 'thin')
                         } else {
                             state.set('vx_ui_icons', 'regular')
@@ -173,7 +201,7 @@ const Main = () => {
                 <Button
                     variant="light"
                     onClick={() => {
-                        if (state.get('vx_ui_scale') === 1.0) {
+                        if (state.get.vx_ui_scale === 1.0) {
                             state.set('vx_ui_scale', 0.85)
                         } else {
                             state.set('vx_ui_scale', 1.0)
@@ -185,7 +213,7 @@ const Main = () => {
                 <Button
                     variant="light"
                     onClick={() => {
-                        if (state.get('vx_ui_color') === 'teal') {
+                        if (state.get.vx_ui_color === 'teal') {
                             state.set('vx_ui_color', 'orange')
                         } else {
                             state.set('vx_ui_color', 'teal')

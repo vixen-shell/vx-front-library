@@ -69,12 +69,13 @@ export class BaseApi {
         const feature = urlParams.get('feature')
         const frame = urlParams.get('frame')
         const route = urlParams.get('route')
+        const popup = urlParams.has('popup')
 
         if (!feature) throw new Error("Unable to find url parameter 'feature'")
         if (!frame) throw new Error("Unable to find url parameter 'frame'")
         if (!route) throw new Error("Unable to find url parameter 'route'")
 
-        return { feature, frame, route }
+        return { feature, frame, route, popup }
     }
 
     static get state() {

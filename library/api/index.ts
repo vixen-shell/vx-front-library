@@ -14,6 +14,7 @@ export {
     useSystray,
     useMenu,
     useDbusMenu,
+    usePopupFrame,
 } from './hooks'
 
 export { BaseApi } from './api'
