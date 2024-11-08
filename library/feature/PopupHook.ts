@@ -1,6 +1,6 @@
 import { BaseApi } from '../api'
-import { ApiRoutes } from '../ApiRoutes'
-import { useVxState } from '../../stateHook'
+import { ApiRoutes } from '../api/ApiRoutes'
+import { useVxState } from '../stateHook'
 import { useEffect, useRef } from 'react'
 
 interface PopupInfos {
@@ -39,16 +39,35 @@ async function hidePopup() {
     return await response.json()
 }
 
+export const useHidePopupFrame = () => {
+    const state = useVxState()
+
+    const hide = () => {
+        if (state.get.vx_popup_frame) {
+            ;(async () => {
+                try {
+                    await hidePopup()
+                    state.set('vx_popup_frame', null)
+                } catch (error: any) {
+                    console.error(error)
+                }
+            })()
+        }
+    }
+
+    return { hide }
+}
+
 export const usePopupFrame = () => {
     const state = useVxState()
 
-    const onHidingCallback = useRef<
+    const onClosingCallback = useRef<
         (
-            position: {
+            lastPosition: {
                 x: number
                 y: number
             } | null,
-            size: {
+            lastSize: {
                 width: number
                 height: number
             } | null
@@ -93,40 +112,27 @@ export const usePopupFrame = () => {
         }
     }
 
-    const hide = () => {
-        if (state.get.vx_popup_frame) {
-            ;(async () => {
-                try {
-                    await hidePopup()
-                    state.set('vx_popup_frame', null)
-                } catch (error: any) {
-                    console.error(error)
-                }
-            })()
-        }
-    }
-
-    const onHiding = (
+    const onClosing = (
         callback: (
-            position: {
+            lastPosition: {
                 x: number
                 y: number
             } | null,
-            size: {
+            lastSize: {
                 width: number
                 height: number
             } | null
         ) => void
     ) => {
-        onHidingCallback.current = callback
+        onClosingCallback.current = callback
     }
 
     useEffect(() => {
         const popupFrameCallbackData = state.get.vx_popup_frame_callback_data
 
         if (popupFrameCallbackData) {
-            if (onHidingCallback.current) {
-                onHidingCallback.current(
+            if (onClosingCallback.current) {
+                onClosingCallback.current(
                     popupFrameCallbackData.position,
                     popupFrameCallbackData.size
                 )
@@ -137,5 +143,5 @@ export const usePopupFrame = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.get.vx_popup_frame_callback_data])
 
-    return { show, hide, onHiding }
+    return { show, onClosing }
 }

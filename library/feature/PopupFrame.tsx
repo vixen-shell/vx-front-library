@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { usePopupFrame } from '../api/hooks/popup'
+import { useHidePopupFrame } from './PopupHook'
 import { useVxState } from '../stateHook'
 import { Paper } from '@mantine/core'
 import { Resizable } from 're-resizable'
@@ -12,7 +12,7 @@ interface PopupFrameProps {
 export const PopupFrame: React.FC<PopupFrameProps> = ({ children }) => {
     const child = React.Children.only(children)
 
-    const popup = usePopupFrame()
+    const popup = useHidePopupFrame()
     const state = useVxState()
 
     // INITIAL OPTIONS

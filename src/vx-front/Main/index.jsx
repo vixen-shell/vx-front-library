@@ -30,8 +30,8 @@ const Main = () => {
     })
 
     useEffect(() => {
-        popup.onHiding((position, size) => {
-            popupSize.current = size
+        popup.onClosing((lastPosition, lastSize) => {
+            popupSize.current = lastSize
         })
         task.afterRun((data, error) => {
             if (data) console.log(data)
@@ -125,27 +125,21 @@ const Main = () => {
                         popup.show({
                             route: 'main',
                             monitorId: 1,
-                            position: { x: 100, y: 1200 },
+                            position: { x: 450, y: 280 },
                             size: popupSize.current,
                             resizable: true,
+                            exitOnMouseLeave: true,
                         })
                     }
                 >
                     Show Popup Frame
-                </Button>
-                <Button variant="light" onClick={() => popup.hide()}>
-                    Hide Popup Frame
                 </Button>
             </div>
             <div style={{ display: 'flex', gap: '12px' }}>
                 <Button
                     variant="light"
                     onClick={() => {
-                        if (params.get('autostart') === true) {
-                            params.set('autostart', false)
-                        } else {
-                            params.set('autostart', true)
-                        }
+                        params.set('autostart', (prevValue) => !prevValue)
                     }}
                 >
                     Set Params
@@ -189,11 +183,9 @@ const Main = () => {
                 <Button
                     variant="light"
                     onClick={() => {
-                        if (state.get.vx_ui_icons === 'regular') {
-                            state.set('vx_ui_icons', 'thin')
-                        } else {
-                            state.set('vx_ui_icons', 'regular')
-                        }
+                        state.set('vx_ui_icons', (prevValue) =>
+                            prevValue === 'regular' ? 'thin' : 'regular'
+                        )
                     }}
                 >
                     Toggle Ui Icons
@@ -201,11 +193,9 @@ const Main = () => {
                 <Button
                     variant="light"
                     onClick={() => {
-                        if (state.get.vx_ui_scale === 1.0) {
-                            state.set('vx_ui_scale', 0.85)
-                        } else {
-                            state.set('vx_ui_scale', 1.0)
-                        }
+                        state.set('vx_ui_scale', (prevValue) =>
+                            prevValue === 1.0 ? 0.85 : 1.0
+                        )
                     }}
                 >
                     Toggle Ui Scale
@@ -213,11 +203,9 @@ const Main = () => {
                 <Button
                     variant="light"
                     onClick={() => {
-                        if (state.get.vx_ui_color === 'teal') {
-                            state.set('vx_ui_color', 'orange')
-                        } else {
-                            state.set('vx_ui_color', 'teal')
-                        }
+                        state.set('vx_ui_color', (prevValue) =>
+                            prevValue === 'teal' ? 'orange' : 'teal'
+                        )
                     }}
                 >
                     Toggle Ui Color

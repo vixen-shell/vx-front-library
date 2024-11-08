@@ -48,7 +48,7 @@ export const useParams = (
     )
 
     const set = useCallback(
-        (path: string, value: any) => {
+        (path: string, value: any | ((prevValue: any) => any)) => {
             if (!(path in params)) {
                 throw new Error('Parameter path not found')
             }
@@ -58,6 +58,11 @@ export const useParams = (
 
             ;(async () => {
                 try {
+                    const paramValue =
+                        typeof value === 'function'
+                            ? value(params[path])
+                            : value
+
                     const response = await fetch(
                         ApiRoutes.feature_set_param(feature, path),
                         {
@@ -65,7 +70,7 @@ export const useParams = (
                             headers: {
                                 'Content-Type': 'application/json',
                             },
-                            body: JSON.stringify({ value: value }),
+                            body: JSON.stringify({ value: paramValue }),
                             signal: signal,
                         }
                     )
@@ -75,7 +80,7 @@ export const useParams = (
                         throw new Error(errorResponse.message)
                     }
 
-                    updateParams(path, value)
+                    updateParams(path, paramValue)
                 } catch (error: any) {
                     console.error(error)
                 }

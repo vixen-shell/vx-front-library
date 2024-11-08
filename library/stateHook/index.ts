@@ -12,10 +12,13 @@ export const useVxState = () => {
         return JSON.parse(JSON.stringify(state[key]))
     }
 
-    const set = (key: string, value: unknown) => {
+    const set = (key: string, value: any | ((prevValue: any) => any)) => {
         BaseApi.state.eventHandler.send_event({
             id: 'SET',
-            data: { key, value },
+            data: {
+                key,
+                value: typeof value === 'function' ? value(state[key]) : value,
+            },
         })
     }
 

@@ -14,7 +14,7 @@ import {
     useMenu,
 } from '../api'
 
-import { usePopupFrame } from '../api/hooks/popup'
+import { usePopupFrame } from './PopupHook'
 
 import FeatureRender from './FeatureRender'
 
