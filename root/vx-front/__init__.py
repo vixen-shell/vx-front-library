@@ -16,8 +16,6 @@ feature.init(
     }
 )
 
-feature.set_required_features(["vx_system"])
-
 
 @content.dispatch("data")
 def feature_title():
