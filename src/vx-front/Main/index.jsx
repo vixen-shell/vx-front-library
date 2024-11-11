@@ -123,7 +123,7 @@ const Main = () => {
                     variant="light"
                     onClick={() =>
                         popup.show({
-                            route: 'main',
+                            route: 'popup',
                             monitorId: 1,
                             position: { x: 450, y: 280 },
                             size: popupSize.current,

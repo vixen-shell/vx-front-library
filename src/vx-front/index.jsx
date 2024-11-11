@@ -1,19 +1,10 @@
 import { Feature } from '../__lib'
+import { DatesProvider, DatePicker } from '@mantine/dates'
+import 'dayjs/locale/fr'
 
 import Main from './Main'
 
 export default Feature.init({
     main: <Main />,
-    popup: (
-        <div
-            style={{
-                width: '100%',
-                height: '100%',
-                backgroundColor: 'black',
-                color: 'white',
-            }}
-        >
-            Hello !
-        </div>
-    ),
+    popup: <DatePicker locale="fr" />,
 })
