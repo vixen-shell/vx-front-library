@@ -13,7 +13,7 @@ export const PopupFrame: React.FC<PopupFrameProps> = ({ children }) => {
     const child = React.Children.only(children)
 
     const popup = useHidePopupFrame()
-    const state = useVxState()
+    const { state, setStateItem } = useVxState()
 
     // INITIAL OPTIONS
     // ---------------------------------------------------------- - - -
@@ -22,12 +22,12 @@ export const PopupFrame: React.FC<PopupFrameProps> = ({ children }) => {
         size: { width: number; height: number } | null
         resizable: boolean
         exit_on_leave: boolean
-    } = state.get.vx_popup_frame
+    } = state.vx_popup_frame
 
     const screenPosition: { x: number; y: number } | null = options.position
         ? {
-              x: options.position.x / state.get.vx_ui_scale,
-              y: options.position.y / state.get.vx_ui_scale,
+              x: options.position.x / state.vx_ui_scale,
+              y: options.position.y / state.vx_ui_scale,
           }
         : null
 
@@ -246,7 +246,7 @@ export const PopupFrame: React.FC<PopupFrameProps> = ({ children }) => {
         if (screen.current) {
             screen.current.style.opacity = '0'
         }
-        state.set('vx_popup_frame_callback_data', {
+        setStateItem('vx_popup_frame_callback_data', {
             position: options.position,
             size: sizeSnapshot.current,
         })
@@ -275,7 +275,7 @@ export const PopupFrame: React.FC<PopupFrameProps> = ({ children }) => {
     const ResizableWrapper = () => (
         <Resizable
             defaultSize={CSSSize()}
-            resizeRatio={1 / state.get.vx_ui_scale}
+            resizeRatio={1 / state.vx_ui_scale}
             style={{ ...CSSPosition() }}
             enable={handleResizableCorner()}
             maxWidth={handleMaxSize().maxWidth}

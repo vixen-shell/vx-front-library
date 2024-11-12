@@ -8,11 +8,14 @@ export const useVxState = () => {
 
     const { state } = context
 
-    const getCopy = (key: string) => {
+    const getStateItemCopy = (key: string) => {
         return JSON.parse(JSON.stringify(state[key]))
     }
 
-    const set = (key: string, value: any | ((prevValue: any) => any)) => {
+    const setStateItem = (
+        key: string,
+        value: any | ((prevValue: any) => any)
+    ) => {
         BaseApi.state.eventHandler.send_event({
             id: 'SET',
             data: {
@@ -22,11 +25,11 @@ export const useVxState = () => {
         })
     }
 
-    const save = () => {
+    const saveState = () => {
         BaseApi.state.eventHandler.send_event({ id: 'SAVE' })
     }
 
-    const saveItem = (key: string) => {
+    const saveStateItem = (key: string) => {
         BaseApi.state.eventHandler.send_event({
             id: 'SAVE_ITEM',
             data: { key },
@@ -34,12 +37,10 @@ export const useVxState = () => {
     }
 
     return {
-        get get() {
-            return state
-        },
-        getCopy,
-        set,
-        save,
-        saveItem,
+        state,
+        getStateItemCopy,
+        setStateItem,
+        saveState,
+        saveStateItem,
     }
 }

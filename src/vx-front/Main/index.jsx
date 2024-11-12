@@ -20,7 +20,7 @@ const Main = () => {
     const task = Feature.Use.Task()
     const frames = Feature.Use.Frames()
     const data = Feature.Use.Data({ UseStream: true, interval: 2.5 })
-    const state = Feature.Use.State()
+    const { state, setStateItem, saveState } = Feature.Use.State()
     const menu = Feature.Use.Menu()
     const theme = useMantineTheme()
 
@@ -183,7 +183,7 @@ const Main = () => {
                 <Button
                     variant="light"
                     onClick={() => {
-                        state.set('vx_ui_icons', (prevValue) =>
+                        setStateItem('vx_ui_icons', (prevValue) =>
                             prevValue === 'regular' ? 'thin' : 'regular'
                         )
                     }}
@@ -193,7 +193,7 @@ const Main = () => {
                 <Button
                     variant="light"
                     onClick={() => {
-                        state.set('vx_ui_scale', (prevValue) =>
+                        setStateItem('vx_ui_scale', (prevValue) =>
                             prevValue === 1.0 ? 0.85 : 1.0
                         )
                     }}
@@ -203,7 +203,7 @@ const Main = () => {
                 <Button
                     variant="light"
                     onClick={() => {
-                        state.set('vx_ui_color', (prevValue) =>
+                        setStateItem('vx_ui_color', (prevValue) =>
                             prevValue === 'teal' ? 'orange' : 'teal'
                         )
                     }}
@@ -213,7 +213,7 @@ const Main = () => {
                 <Button
                     variant="light"
                     onClick={() => {
-                        state.save()
+                        saveState()
                     }}
                 >
                     Save Vixen State

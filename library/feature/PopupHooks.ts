@@ -40,14 +40,14 @@ async function hidePopup() {
 }
 
 export const useHidePopupFrame = () => {
-    const state = useVxState()
+    const { state, setStateItem } = useVxState()
 
     const hide = () => {
-        if (state.get.vx_popup_frame) {
+        if (state.vx_popup_frame) {
             ;(async () => {
                 try {
                     await hidePopup()
-                    state.set('vx_popup_frame', null)
+                    setStateItem('vx_popup_frame', null)
                 } catch (error: any) {
                     console.error(error)
                 }
@@ -59,7 +59,7 @@ export const useHidePopupFrame = () => {
 }
 
 export const usePopupFrame = () => {
-    const state = useVxState()
+    const { state, setStateItem } = useVxState()
 
     const onClosingCallback = useRef<
         (
@@ -89,8 +89,8 @@ export const usePopupFrame = () => {
         resizable?: boolean
         exitOnMouseLeave?: boolean
     }) => {
-        if (!state.get.vx_popup_frame) {
-            state.set('vx_popup_frame', {
+        if (!state.vx_popup_frame) {
+            setStateItem('vx_popup_frame', {
                 position: position || null,
                 size: size || null,
                 resizable: resizable,
@@ -128,7 +128,7 @@ export const usePopupFrame = () => {
     }
 
     useEffect(() => {
-        const popupFrameCallbackData = state.get.vx_popup_frame_callback_data
+        const popupFrameCallbackData = state.vx_popup_frame_callback_data
 
         if (popupFrameCallbackData) {
             if (onClosingCallback.current) {
@@ -138,10 +138,10 @@ export const usePopupFrame = () => {
                 )
             }
 
-            state.set('vx_popup_frame_callback_data', null)
+            setStateItem('vx_popup_frame_callback_data', null)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state.get.vx_popup_frame_callback_data])
+    }, [state.vx_popup_frame_callback_data])
 
     return { show, onClosing }
 }
