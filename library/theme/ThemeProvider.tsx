@@ -25,7 +25,8 @@ export const ThemeProvider: React.FC<{
                     BaseApi.defaultFonts.font_family_monospace,
                 primaryColor: state.vx_ui_color,
             })}
-            defaultColorScheme={state.vx_ui_color_scheme || 'auto'}
+            defaultColorScheme="auto"
+            forceColorScheme={state.vx_ui_color_scheme || undefined}
         >
             {children}
         </MantineProvider>

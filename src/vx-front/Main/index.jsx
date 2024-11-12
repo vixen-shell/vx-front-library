@@ -183,6 +183,18 @@ const Main = () => {
                 <Button
                     variant="light"
                     onClick={() => {
+                        setStateItem('vx_ui_color_scheme', (prevValue) =>
+                            prevValue === null || prevValue === 'dark'
+                                ? 'light'
+                                : 'dark'
+                        )
+                    }}
+                >
+                    Toggle Ui Color scheme
+                </Button>
+                <Button
+                    variant="light"
+                    onClick={() => {
                         setStateItem('vx_ui_icons', (prevValue) =>
                             prevValue === 'regular' ? 'thin' : 'regular'
                         )
