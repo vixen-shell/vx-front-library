@@ -8,7 +8,7 @@ import {
 } from '@mantine/core'
 
 import { Feature, Icon, SysIcon, ImageFile, SysTray } from '../../__lib'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 const Main = () => {
     const popup = Feature.Use.PopupFrame()

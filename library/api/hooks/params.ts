@@ -3,7 +3,7 @@ import { BaseApi } from '../api'
 import { ApiRoutes } from '../ApiRoutes'
 
 export const useParams = (
-    paths: string[],
+    paths: string[] = [],
     feature: string = BaseApi.urlParams.feature
 ) => {
     const [params, setParams] = useState<Record<string, any>>({})
