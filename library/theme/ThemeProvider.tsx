@@ -5,6 +5,7 @@ import { createTheme, MantineProvider } from '@mantine/core'
 import { useEffect } from 'react'
 import { BaseApi } from '../api'
 import { useVxState } from '../stateHook'
+import { DatesProvider } from '@mantine/dates'
 
 export const ThemeProvider: React.FC<{
     children: React.ReactNode
@@ -13,7 +14,7 @@ export const ThemeProvider: React.FC<{
 
     useEffect(() => {
         document.documentElement.style.zoom = String(state.vx_ui_scale)
-    }, [state.vx_ui_scale])
+    }, [state.vx_ui_locale, state.vx_ui_scale])
 
     return (
         <MantineProvider
@@ -28,7 +29,9 @@ export const ThemeProvider: React.FC<{
             defaultColorScheme="auto"
             forceColorScheme={state.vx_ui_color_scheme || undefined}
         >
-            {children}
+            <DatesProvider settings={{ locale: BaseApi.locale(true) }}>
+                {children}
+            </DatesProvider>
         </MantineProvider>
     )
 }

@@ -1,16 +1,20 @@
-import '@mantine/core/styles.css'
 import {
+    Feature,
+    Icon,
+    SysIcon,
+    ImageFile,
+    SysTray,
     Title,
     Text,
     Button,
     RingProgress,
-    useMantineTheme,
-} from '@mantine/core'
+    useTheme,
+} from '../../__lib'
 
-import { Feature, Icon, SysIcon, ImageFile, SysTray } from '../../__lib'
 import { useEffect, useRef } from 'react'
 
 const Main = () => {
+    const locales = Feature.Use.Locales()
     const popup = Feature.Use.PopupFrame()
     const params = Feature.Use.Params([
         'autostart',
@@ -20,9 +24,9 @@ const Main = () => {
     const task = Feature.Use.Task()
     const frames = Feature.Use.Frames()
     const data = Feature.Use.Data({ UseStream: true, interval: 2.5 })
-    const { state, setStateItem, saveState } = Feature.Use.State()
+    const { setStateItem, saveState } = Feature.Use.State()
     const menu = Feature.Use.Menu()
-    const theme = useMantineTheme()
+    const theme = useTheme()
 
     const popupSize = useRef({
         width: 400,
@@ -54,6 +58,12 @@ const Main = () => {
         >
             <Title order={2}>
                 {data.get('title', { name: 'feature_title' })}
+            </Title>
+            <Title>
+                {locales("Bonjour, je m'appelle [0] et j'ai [1] ans.", [
+                    'Noha',
+                    42,
+                ])}
             </Title>
             <div style={{ display: 'flex' }}>
                 <RingProgress

@@ -62,15 +62,7 @@ export default defineConfig({
             formats: ['es'],
         },
         rollupOptions: {
-            external: [
-                'react',
-                'react-dom',
-                'react/jsx-runtime',
-                '@mantine/core',
-                '@mantine/dates',
-                '@mantine/hooks',
-                'dayjs',
-            ],
+            external: ['react', 'react-dom', 'react/jsx-runtime'],
             input: Object.fromEntries(
                 getFiles('library').map((file) => [
                     relative(

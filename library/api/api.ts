@@ -1,19 +1,41 @@
 import { ApiRoutes } from './ApiRoutes'
 import { SocketEventHandler, SocketEventData } from './SocketEventHandler'
+import { dayjsLocaleImporters } from '../theme/locale'
 
 interface DefaultFonts {
     font_family: string
     font_family_monospace: string
 }
 
-async function request(route: string, force: boolean = false) {
-    if (!force && !BaseApi.isInit) throw new Error('Api not initialized')
-
+async function request(route: string) {
     const response = await fetch(route)
 
     if (!response.ok) {
         const errorResponse = await response.json()
         throw new Error(errorResponse.message || 'Request Error')
+    }
+
+    return await response.json()
+}
+
+async function fetchLocales() {
+    const response = await fetch(
+        ApiRoutes.feature_data(BaseApi.urlParams.feature),
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                data_name: 'locales',
+                handler_name: '__locales__',
+            }),
+        }
+    )
+
+    if (!response.ok) {
+        const errorResponse = await response.json()
+        throw new Error(errorResponse.message)
     }
 
     return await response.json()
@@ -26,20 +48,24 @@ export class BaseApi {
     private static _stateEventHandler: SocketEventHandler | undefined =
         undefined
     private static _defaultFonts: DefaultFonts | undefined = undefined
+    private static _locale: string | undefined = undefined
+    private static _locales: { [key: string]: string } | undefined = undefined
 
     static async init() {
         if (!(await BaseApi.ping())) {
             throw new Error('Unable to acces Vixen Api')
         }
 
-        BaseApi._features = (await request(ApiRoutes.features_names, true))
+        BaseApi._features = (await request(ApiRoutes.features_names))
             .names as string[]
 
-        BaseApi._initialState = await request(ApiRoutes.vx_state, true)
+        BaseApi._initialState = await request(ApiRoutes.vx_state)
         BaseApi._stateEventHandler = new SocketEventHandler(
             ApiRoutes.feature_state_socket(BaseApi.urlParams.feature)
         )
-        BaseApi._defaultFonts = await request(ApiRoutes.gtk_fonts, true)
+        BaseApi._defaultFonts = await request(ApiRoutes.gtk_fonts)
+        BaseApi._locale = await request(ApiRoutes.locale)
+        BaseApi._locales = (await fetchLocales()).locales
 
         BaseApi._isInit = true
     }
@@ -93,5 +119,28 @@ export class BaseApi {
             throw new Error('Api not initialized')
         }
         return BaseApi._defaultFonts!
+    }
+
+    static get locales() {
+        if (!BaseApi._isInit) {
+            throw new Error('Api not initialized')
+        }
+        return BaseApi._locales!
+    }
+
+    static locale(dayjs: boolean = false) {
+        if (!BaseApi._isInit) {
+            throw new Error('Api not initialized')
+        }
+
+        if (!dayjs) return BaseApi._locale!
+
+        const [script, region] = BaseApi._locale!.toLowerCase().split('_')
+
+        return `${script}-${region}` in dayjsLocaleImporters
+            ? `${script}-${region}`
+            : script in dayjsLocaleImporters
+            ? script
+            : 'en'
     }
 }

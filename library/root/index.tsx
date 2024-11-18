@@ -1,4 +1,5 @@
 import '@mantine/core/styles.css'
+import { dayjsLocaleImporters } from '../theme/locale'
 import ReactDOM from 'react-dom/client'
 import { ErrorFrame } from '../components/ErrorFrame'
 import { BaseApi } from '../api'
@@ -42,6 +43,8 @@ export function create(container: HTMLElement) {
 
     async function initFeature(feature: FeatureCallback) {
         await BaseApi.init()
+        await dayjsLocaleImporters[BaseApi.locale(true)]()
+
         insertFeature(feature())
     }
 

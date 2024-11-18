@@ -14,6 +14,7 @@ export {
     useSystray,
     useMenu,
     useDbusMenu,
+    useLocales,
 } from './hooks'
 
 export { BaseApi } from './api'

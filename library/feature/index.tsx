@@ -12,6 +12,7 @@ import {
     useFrames,
     useParams,
     useMenu,
+    useLocales,
 } from '../api'
 
 import { usePopupFrame } from './PopupHooks'
@@ -43,6 +44,10 @@ export class Feature {
         }
 
         return feature
+    }
+
+    static get locale() {
+        return $<string>('locale', BaseApi.locale())
     }
 
     static get names() {
@@ -92,6 +97,10 @@ export class Feature {
 
         get Socket() {
             return $<typeof useSocket>('Socket', useSocket)
+        },
+
+        get Locales() {
+            return $<typeof useLocales>('Locales', useLocales)
         },
     }
 }

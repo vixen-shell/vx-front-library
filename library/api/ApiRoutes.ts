@@ -9,6 +9,7 @@ export class ApiRoutes {
     static readonly ping = uri('http', '/ping')
     static readonly shutdown = uri('http', '/shutdown')
     static readonly gtk_fonts = uri('http', '/gtk_fonts')
+    static readonly locale = uri('http', '/locale')
     static readonly vx_state = uri('http', '/vx_state')
 
     static system_icons(iconName: string) {
