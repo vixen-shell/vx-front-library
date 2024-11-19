@@ -29,10 +29,10 @@ export const useVxState = () => {
         BaseApi.state.eventHandler.send_event({ id: 'SAVE' })
     }
 
-    const saveStateItem = (key: string) => {
+    const saveStateItems = (keys: string[]) => {
         BaseApi.state.eventHandler.send_event({
-            id: 'SAVE_ITEM',
-            data: { key },
+            id: 'SAVE_ITEMS',
+            data: { keys },
         })
     }
 
@@ -41,6 +41,6 @@ export const useVxState = () => {
         getStateItemCopy,
         setStateItem,
         saveState,
-        saveStateItem,
+        saveStateItems,
     }
 }
