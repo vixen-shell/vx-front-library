@@ -14,6 +14,7 @@ import {
 import { useEffect, useRef } from 'react'
 
 const Main = () => {
+    const { time } = Feature.Use.Time('dddd DD MMMM YYYY - HH:mm:ss')
     const locales = Feature.Use.Locales()
     const popup = Feature.Use.PopupFrame()
     const params = Feature.Use.Params([
@@ -59,7 +60,8 @@ const Main = () => {
             <Title order={2}>
                 {data.get('title', { name: 'feature_title' })}
             </Title>
-            <Title>
+            <Title order={4}>{time}</Title>
+            <Title order={4}>
                 {locales("Bonjour, je m'appelle [0] et j'ai [1] ans.", [
                     'Noha',
                     42,

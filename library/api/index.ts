@@ -15,6 +15,7 @@ export {
     useMenu,
     useDbusMenu,
     useLocales,
+    useTime,
 } from './hooks'
 
 export { BaseApi } from './api'

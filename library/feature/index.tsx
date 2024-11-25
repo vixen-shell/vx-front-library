@@ -13,6 +13,7 @@ import {
     useParams,
     useMenu,
     useLocales,
+    useTime,
 } from '../api'
 
 import { usePopupFrame } from './PopupHooks'
@@ -101,6 +102,10 @@ export class Feature {
 
         get Locales() {
             return $<typeof useLocales>('Locales', useLocales)
+        },
+
+        get Time() {
+            return $<typeof useTime>('Time', useTime)
         },
     }
 }
