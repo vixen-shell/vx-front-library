@@ -10,10 +10,9 @@ export const useTime = (
 
     useEffect(() => {
         dayjs.locale(BaseApi.locale(true))
+        setTime(dayjs().format(defaultFormat))
 
-        if (!stream) {
-            setTime(dayjs().format(defaultFormat))
-        } else {
+        if (stream) {
             const i = setInterval(() => {
                 setTime(dayjs().format(defaultFormat))
             }, 1000)
