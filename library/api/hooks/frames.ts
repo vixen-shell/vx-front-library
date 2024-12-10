@@ -1,117 +1,89 @@
-import { useCallback, useEffect, useState } from 'react'
-import { BaseApi } from '../api'
+import { useRef, useEffect, useState, useCallback } from 'react'
 import { ApiRoutes } from '../ApiRoutes'
+import { BaseApi } from '../api'
+import { SocketEventHandler, SocketEventData } from '../SocketEventHandler'
 
 export const useFrames = (feature: string = BaseApi.urlParams.feature) => {
+    const socket = useRef<SocketEventHandler>(
+        new SocketEventHandler(ApiRoutes.feature_frames_socket(feature))
+    )
+
     const [ids, setIds] = useState<string[]>([])
     const [actives, setActives] = useState<string[]>([])
 
-    const request = useCallback(async (route: string, signal: AbortSignal) => {
-        const response = await fetch(route, { signal: signal })
+    useEffect(() => {
+        const currentSocket = socket.current
 
-        if (!response.ok) {
-            const errorResponse = await response.json()
-            throw new Error(errorResponse.message)
+        const onError = (data: SocketEventData) => {
+            console.error(data.message)
+        }
+        const onFrameIds = (data: SocketEventData) => {
+            setIds(data.frame_ids)
+            setActives(data.active_frame_ids)
+        }
+        const onOpenFrame = (data: SocketEventData) => {
+            setActives(data.active_frame_ids)
+        }
+        const onCloseFrame = (data: SocketEventData) => {
+            setActives(data.active_frame_ids)
+        }
+        const onNewFromTemplate = (data: SocketEventData) => {
+            setIds(data.frame_ids)
+        }
+        const onRemoveFromTemplate = (data: SocketEventData) => {
+            setIds(data.frame_ids)
         }
 
-        return await response.json()
+        currentSocket.addEventListener('ERROR', onError)
+        currentSocket.addEventListener('FRAME_IDS', onFrameIds)
+        currentSocket.addEventListener('OPEN', onOpenFrame)
+        currentSocket.addEventListener('CLOSE', onCloseFrame)
+        currentSocket.addEventListener('NEW_FROM_TEMPLATE', onNewFromTemplate)
+        currentSocket.addEventListener(
+            'REMOVE_FROM_TEMPLATE',
+            onRemoveFromTemplate
+        )
+        currentSocket.connect()
+
+        currentSocket.send_event({ id: 'UPDATE' })
+
+        return () => {
+            currentSocket.removeEventListener('ERROR', onError)
+            currentSocket.removeEventListener('OPEN_SOCKET', onFrameIds)
+            currentSocket.removeEventListener('OPEN', onOpenFrame)
+            currentSocket.removeEventListener('CLOSE', onCloseFrame)
+            currentSocket.removeEventListener(
+                'NEW_FROM_TEMPLATE',
+                onNewFromTemplate
+            )
+            currentSocket.removeEventListener(
+                'REMOVE_FROM_TEMPLATE',
+                onRemoveFromTemplate
+            )
+            currentSocket.disconnect()
+        }
     }, [])
 
-    const update = useCallback(() => {
-        const controller = new AbortController()
-        const { signal } = controller
+    const toggle = useCallback((frameId: string) => {
+        socket.current.send_event({
+            id: 'TOGGLE',
+            data: { frame_id: frameId },
+        })
+    }, [])
 
-        ;(async () => {
-            try {
-                const data = await request(
-                    ApiRoutes.frames_ids(feature),
-                    signal
-                )
+    const open = useCallback((frameId: string) => {
+        socket.current.send_event({
+            id: 'OPEN',
+            data: { frame_id: frameId },
+        })
+    }, [])
 
-                setIds(data.ids)
-                setActives(data.actives)
-            } catch (error: any) {
-                setIds([])
-                setActives([])
-                console.error(error)
-            }
-        })()
-
-        return () => controller.abort()
-    }, [feature, request])
-
-    const toggle = useCallback(
-        (frameId: string) => {
-            const controller = new AbortController()
-            const { signal } = controller
-
-            ;(async () => {
-                try {
-                    await request(
-                        ApiRoutes.frame_toggle(feature, frameId),
-                        signal
-                    )
-
-                    update()
-                } catch (error: any) {
-                    console.error(error)
-                }
-            })()
-
-            return () => controller.abort()
-        },
-        [feature, request, update]
-    )
-
-    const open = useCallback(
-        (frameId: string) => {
-            const controller = new AbortController()
-            const { signal } = controller
-
-            ;(async () => {
-                try {
-                    await request(
-                        ApiRoutes.frame_open(feature, frameId),
-                        signal
-                    )
-
-                    update()
-                } catch (error: any) {
-                    console.error(error)
-                }
-            })()
-
-            return () => controller.abort()
-        },
-        [feature, request, update]
-    )
-
-    const close = useCallback(
-        (frameId: string) => {
-            const controller = new AbortController()
-            const { signal } = controller
-
-            ;(async () => {
-                try {
-                    await request(
-                        ApiRoutes.frame_close(feature, frameId),
-                        signal
-                    )
-
-                    update()
-                } catch (error: any) {
-                    console.error(error)
-                }
-            })()
-
-            return () => controller.abort()
-        },
-        [feature, request, update]
-    )
-
-    useEffect(() => {
-        update()
-    }, [update])
+    const close = useCallback((frameId: string) => {
+        socket.current.send_event({
+            id: 'CLOSE',
+            data: { frame_id: frameId },
+        })
+    }, [])
 
     return { ids, actives, toggle, open, close }
 }

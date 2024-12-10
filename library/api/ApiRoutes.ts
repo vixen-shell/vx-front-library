@@ -79,6 +79,9 @@ export class ApiRoutes {
     static feature_systray_socket(featureName: string) {
         return uri('ws', `/feature/${featureName}/systray`)
     }
+    static feature_frames_socket(featureName: string) {
+        return uri('ws', `/feature/${featureName}/frames`)
+    }
     static feature_data_streamer_socket(featureName: string) {
         return uri('ws', `/feature/${featureName}/data_streamer`)
     }
