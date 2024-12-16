@@ -16,8 +16,6 @@ import {
     useTime,
 } from '../api'
 
-import { usePopupFrame } from './PopupHooks'
-
 import FeatureRender from './FeatureRender'
 
 function $<T>(name: string, reference: T) {
@@ -90,10 +88,6 @@ export class Feature {
 
         get Menu() {
             return $<typeof useMenu>('Menu', useMenu)
-        },
-
-        get PopupFrame() {
-            return $<typeof usePopupFrame>('PopupFrame', usePopupFrame)
         },
 
         get Socket() {

@@ -106,8 +106,4 @@ export class ApiRoutes {
     static frame_close(featureName: string, frameId: string) {
         return uri('http', `/frame/${featureName}/close/${frameId}`)
     }
-    static popup_frame_show(featureName: string) {
-        return uri('http', `/popup_frame/${featureName}/show`)
-    }
-    static readonly popup_frame_hide = uri('http', '/popup_frame/hide')
 }

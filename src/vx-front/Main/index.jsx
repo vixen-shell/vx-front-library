@@ -8,7 +8,7 @@ import {
     Text,
     Button,
     RingProgress,
-    useTheme,
+    useMantineTheme as useTheme,
 } from '../../__lib'
 
 import { useEffect, useRef } from 'react'
@@ -16,7 +16,6 @@ import { useEffect, useRef } from 'react'
 const Main = () => {
     const { time } = Feature.Use.Time('dddd DD MMMM YYYY - HH:mm:ss')
     const locales = Feature.Use.Locales()
-    const popup = Feature.Use.PopupFrame()
     const params = Feature.Use.Params([
         'autostart',
         'frames.main.name',
@@ -28,21 +27,6 @@ const Main = () => {
     const { setStateItem, saveState } = Feature.Use.State()
     const menu = Feature.Use.Menu()
     const theme = useTheme()
-
-    const popupSize = useRef({
-        width: 400,
-        height: 400,
-    })
-
-    useEffect(() => {
-        popup.onClosing((lastPosition, lastSize) => {
-            popupSize.current = lastSize
-        })
-        task.afterRun((data, error) => {
-            if (data) console.log(data)
-            if (error) console.error(error)
-        })
-    }, [])
 
     return (
         <div
@@ -129,23 +113,6 @@ const Main = () => {
                 <p>
                     <b>frames.main.route</b>: {params.get('frames.main.route')}
                 </p>
-            </div>
-            <div style={{ display: 'flex', gap: '12px' }}>
-                <Button
-                    variant="light"
-                    onClick={() =>
-                        popup.show({
-                            route: 'popup',
-                            monitorId: 1,
-                            position: { x: 450, y: 280 },
-                            size: popupSize.current,
-                            resizable: true,
-                            exitOnMouseLeave: true,
-                        })
-                    }
-                >
-                    Show Popup Frame
-                </Button>
             </div>
             <div style={{ display: 'flex', gap: '12px' }}>
                 <Button
